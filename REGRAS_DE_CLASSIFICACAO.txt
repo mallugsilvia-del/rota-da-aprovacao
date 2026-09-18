@@ -1,0 +1,55 @@
+REGRAS DE CLASSIFICAÇÃO AUTOMÁTICA
+=================================
+
+O site classifica as questões no navegador antes de enviá-las ao Firestore.
+Não é necessário instalar Node.js, usar Cloud Shell ou pagar outro serviço.
+
+ORDEM DAS REGRAS
+1. Preserva matéria e tema quando já são específicos.
+2. Substitui campos vazios ou genéricos: “Conhecimentos Gerais”,
+   “Interdisciplinar”, “Geral” e “A classificar”.
+3. No ENEM, define primeiro a área oficial pelo dia e número:
+   - 1º dia, questões 1–45: Linguagens
+   - 1º dia, questões 46–90: Ciências Humanas
+   - 2º dia, questões 91–135: Ciências da Natureza
+   - 2º dia, questões 136–180: Matemática
+4. Dentro da área, soma pontos para palavras-chave de cada matéria.
+5. Identifica o tema com uma segunda lista de palavras-chave.
+6. Calcula complexidade de 1 a 5 pelo tamanho, comando e recursos da questão.
+7. Converte a complexidade em dificuldade: Fácil, Médio ou Difícil.
+
+CAMPOS GRAVADOS EM CADA QUESTÃO
+- area
+- materia
+- tema
+- nivel
+- complexidade
+- categorias: [área, matéria, tema]
+- classificacaoAutomatica
+- confiancaClassificacao
+- versaoClassificador
+
+COMO ACRESCENTAR NOVAS REGRAS
+Abra classificador.js no VS Code e procure por:
+- REGRAS_MATERIAS: reconhece a disciplina.
+- REGRAS_TEMAS: reconhece o conteúdo dentro da disciplina.
+
+Em REGRAS_MATERIAS, palavras “fortes” valem 4 pontos, “medias” valem 2 e
+“leves” valem 1. Use expressões específicas no grupo forte para reduzir erros.
+
+RECLASSIFICAR O BANCO QUE JÁ ESTÁ NO FIRESTORE
+1. Entre em Admin.
+2. Carregue o banco completo.
+3. Deixe “Classificar automaticamente” marcado.
+4. Confira a prévia.
+5. Importe novamente.
+
+Os IDs são os mesmos, portanto os documentos serão atualizados sem duplicação.
+Para forçar uma revisão de campos específicos já preenchidos, marque também
+“Reclassificar campos específicos”.
+
+REVISÃO RECOMENDADA
+As regras evitam a classificação manual, mas a confiança “baixa” indica que a
+questão tem poucos sinais textuais. Use a prévia para revisar primeiro esses casos
+quando desejar melhorar a precisão; não é necessário corrigir um por um para
+realizar a importação.

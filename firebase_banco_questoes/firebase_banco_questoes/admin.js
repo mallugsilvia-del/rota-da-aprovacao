@@ -1,0 +1,15 @@
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import { getFirestore, doc, getDoc, writeBatch } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+import { firebaseConfig } from './firebase-config.js';
+
+const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app), provider=new GoogleAuthProvider();
+const $=id=>document.getElementById(id); let lista=[]; let admin=false;
+const log=m=>{$('log').textContent += m+'\n'; $('log').scrollTop=$('log').scrollHeight;};
+$('login').onclick=()=>signInWithPopup(auth,provider).catch(e=>log('ERRO login: '+e.message)); $('logout').onclick=()=>signOut(auth);
+onAuthStateChanged(auth, async user=>{ admin=false; $('user').textContent=user?`${user.displayName||user.email} (${user.uid})`:'Não autenticado'; $('logout').disabled=!user; if(user){const snap=await getDoc(doc(db,'admins',user.uid)); admin=snap.exists(); log(admin?'Administrador autorizado.':'Conta autenticada, mas UID não está em /admins. Crie o documento pelo Console do Firebase. UID: '+user.uid);} atualizar(); });
+$('file').onchange=async e=>{lista=[]; const f=e.target.files[0]; if(!f){atualizar();return;} try{const data=JSON.parse(await f.text()); lista=Array.isArray(data)?data:(data.questoes||[]); log(`Arquivo lido: ${lista.length} registros.`);}catch(err){log('JSON inválido: '+err.message);} atualizar();};
+function validar(q){const erros=[]; if(!q.id)erros.push('id'); if(!q.vestibular)erros.push('vestibular'); if(!Number.isInteger(q.ano))erros.push('ano'); if(!Number.isInteger(q.numero))erros.push('numero'); if(!Array.isArray(q.opcoes))erros.push('opcoes'); if(q.resposta!==null && q.resposta!==undefined && !Number.isInteger(q.resposta))erros.push('resposta'); return erros;}
+function atualizar(){ $('preview').disabled=!lista.length; $('import').disabled=!lista.length||!admin; }
+$('preview').onclick=()=>{let ok=0,bad=0; const exemplos=[]; for(const q of lista){const e=validar(q); if(e.length){bad++; if(exemplos.length<10)exemplos.push(`${q.id||'(sem id)'}: ${e.join(', ')}`);}else ok++;} $('stats').textContent=`Válidas: ${ok} | Inválidas: ${bad} | Total: ${lista.length}`; if(exemplos.length)log('Exemplos inválidos:\n'+exemplos.join('\n'));};
+$('import').onclick=async()=>{if(!admin)return; const validas=lista.filter(q=>validar(q).length===0); const loteMax=400; let feitas=0; $('import').disabled=true; $('progress').value=0; try{for(let i=0;i<validas.length;i+=loteMax){const grupo=validas.slice(i,i+loteMax); const batch=writeBatch(db); grupo.forEach(q=>batch.set(doc(db,'questoes',q.id),q,{merge:true})); await batch.commit(); feitas+=grupo.length; $('progress').value=Math.round(feitas/validas.length*100); log(`Lote concluído: ${feitas}/${validas.length}`);} log('IMPORTAÇÃO CONCLUÍDA.');}catch(e){log('ERRO na importação: '+e.message);}finally{$('import').disabled=!admin;}};

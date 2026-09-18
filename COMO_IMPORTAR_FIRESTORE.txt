@@ -1,0 +1,25 @@
+ROTA DA APROVAÇÃO — IMPORTAÇÃO FIRESTORE
+
+1. Publique TODO o conteúdo desta pasta no GitHub Pages.
+2. Firebase Authentication: ative Google (ou E-mail/senha).
+3. Firestore: mantenha o banco (default).
+4. Crie admins/SEU_UID com campo ativo (boolean) = true.
+5. Abra o site e clique em Admin.
+6. Faça login.
+7. Clique em “Carregar banco completo do projeto”.
+8. Deixe marcada a opção “Classificar automaticamente”. O classificador separa
+   área, matéria, tema, dificuldade e complexidade por regras de palavras-chave.
+9. Confira a prévia por categoria e clique em “Validar / pré-visualizar”.
+10. Clique em “Importar JSON no Firestore”.
+
+O arquivo está em banco-questoes/banco-questoes-completo.json.
+A pasta imagens também deve ser publicada na raiz do site.
+
+IMPORTANTE
+- A importação usa IDs fixos. Se as questões já estiverem no Firestore, repetir a
+  importação atualiza os registros e NÃO cria duplicatas.
+- Por padrão, classificações específicas já existentes são preservadas. Valores
+  vazios, “Conhecimentos Gerais”, “Interdisciplinar” e “A classificar” são preenchidos.
+- Marque “Reclassificar também campos específicos” somente para recalcular tudo.
+- As novas matérias e seus temas são cadastrados automaticamente na coleção materias.
+- Para ampliar as regras, edite REGRAS_MATERIAS e REGRAS_TEMAS em classificador.js.

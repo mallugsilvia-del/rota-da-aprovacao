@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!--Rota-da-Aprovacao-Firebase-CORRIGIDO
+  ROTA DA APROVAÇÃO
+  Projeto estático: não usa frameworks, servidor ou banco de dados.
+  A estrutura fica neste HTML, a aparência em style.css e a lógica em script.js.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portal de estudos com avisos, trilhas guiadas e questões comentadas de vestibulares.">
+  <title>Rota da Aprovação — Estudos e questões comentadas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Cabeçalho fixo. Os atributos data-page são lidos pelo JavaScript. -->
+  <header class="topbar">
+    <div class="container topbar-content">
+      <button class="logo" data-page="inicio" aria-label="Ir para o início"><span class="logo-icon" aria-hidden="true">⚑</span><span><strong>ROTA</strong><small>DA APROVAÇÃO</small></span></button>
+      <nav id="menu-principal" class="menu" aria-label="Menu principal">
+        <button class="active" data-page="inicio">Início</button><button data-page="avisos">Avisos</button><button data-page="agenda">Agenda</button><button data-page="estudos">Guias</button><button data-page="questoes">Questões</button><button data-page="desempenho">Desempenho</button><button data-page="admin">Admin</button>
+      </nav>
+      <button id="menu-mobile" class="menu-mobile" aria-label="Abrir menu" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- PÁGINA INICIAL -->
+    <section id="inicio" class="pagina active">
+      <div class="hero">
+        <div class="container hero-grid">
+          <div class="hero-texto">
+            <span class="etiqueta">✦ CONTEÚDO, PRÁTICA E EVOLUÇÃO</span>
+            <h1>Estude com direção.<br><em>Aprenda de verdade.</em></h1>
+            <p>Guias objetivos e questões de ENEM, Fuvest, Unesp e Unicamp com dica, resolução passo a passo e revisão inteligente.</p>
+            <div class="acoes"><button class="botao-primario" data-page="questoes">▶ Resolver questões</button><button class="botao-secundario" data-page="estudos">Explorar guias</button></div>
+            <div class="hero-numeros" aria-label="Resumo do conteúdo">
+              <span><strong id="total-questoes-hero">21</strong><small>questões guiadas</small></span><span><strong>4</strong><small>vestibulares</small></span><span><strong id="total-guias-hero">8</strong><small>guias de estudo</small></span>
+            </div>
+          </div>
+          <aside class="painel-hero" aria-label="Seu progresso">
+            <div class="painel-topo"><span>SEU PROGRESSO</span><span class="pulso">● ao vivo</span></div>
+            <div class="anel-progresso" id="anel-progresso"><strong id="percentual-hero">0%</strong><small>concluído</small></div>
+            <div class="mini-estatisticas"><span><strong id="acertos-hero">0</strong><small>acertos</small></span><span><strong id="sequencia-hero">0</strong><small>sequência</small></span><span><strong id="favoritos-hero">0</strong><small>favoritas</small></span></div>
+            <button class="proxima-acao" data-page="questoes"><span><small>PRÓXIMA AÇÃO</small><strong>Continue sua prática</strong></span><b>›</b></button>
+          </aside>
+        </div>
+      </div>
+
+      <section class="container secao">
+        <div class="titulo-secao"><div><span class="etiqueta">COMECE POR AQUI</span><h2>Uma rota completa de aprendizagem</h2></div></div>
+        <div class="recursos-grid">
+          <button class="recurso-card" data-page="estudos"><span class="recurso-icone lilas">⌁</span><b>1</b><h3>Estude o conteúdo</h3><p>Resumo, conceitos-chave, estratégia e exemplo.</p><small>Abrir guias →</small></button>
+          <button class="recurso-card" data-page="questoes"><span class="recurso-icone coral">?</span><b>2</b><h3>Pratique com apoio</h3><p>Peça uma dica antes de conferir a resposta.</p><small>Começar prática →</small></button>
+          <button class="recurso-card" data-page="desempenho"><span class="recurso-icone verde">↗</span><b>3</b><h3>Revise seus pontos</h3><p>Retome erros e favoritas salvos neste aparelho.</p><small>Ver desempenho →</small></button>
+        </div>
+      </section>
+
+      <section class="fundo-suave"><div class="container duas-colunas">
+        <div><div class="titulo-secao"><div><span class="etiqueta">AGENDA</span><h2>Próximas datas</h2></div></div><div id="datas-inicio" class="lista-cards"></div></div>
+        <div><div class="titulo-secao"><div><span class="etiqueta">RECOMENDADOS</span><h2>Guias para hoje</h2></div></div><div id="guias-inicio" class="lista-cards"></div></div>
+      </div></section>
+    </section>
+
+    <!-- PÁGINA DE AVISOS -->
+    <section id="avisos" class="pagina">
+      <div class="cabecalho-pagina"><div class="container"><span class="cabecalho-icone">🔔</span><div><span class="etiqueta">MURAL DO ALUNO</span><h1>Avisos importantes</h1><p>Prazos, orientações e lembretes reunidos em um só lugar.</p></div></div></div>
+      <div class="container secao"><div id="lista-avisos" class="lista-avisos"></div></div>
+    </section>
+
+    <!-- PÁGINA DE AGENDA -->
+    <section id="agenda" class="pagina">
+      <div class="cabecalho-pagina"><div class="container"><span class="cabecalho-icone">📅</span><div><span class="etiqueta">PLANEJE-SE</span><h1>Calendário de vestibulares</h1><p>Transforme cada data em uma ação e confirme sempre no edital oficial.</p></div></div></div>
+      <div class="container secao agenda-grid"><aside class="resumo-agenda"><span>PRÓXIMA AÇÃO</span><strong>Organize os editais</strong><p>Anote inscrições, pagamentos, locais e dias de prova.</p><div class="dica"><b>◷ Dica</b><small>Programe dois lembretes: sete dias e um dia antes.</small></div></aside><div><div id="lista-datas" class="lista-cards"></div><p class="observacao">Datas demonstrativas do projeto. Consulte os portais oficiais antes de tomar qualquer decisão.</p></div></div>
+    </section>
+
+    <!-- PÁGINA DE GUIAS DE ESTUDO -->
+    <section id="estudos" class="pagina">
+      <div class="cabecalho-pagina"><div class="container"><span class="cabecalho-icone">📚</span><div><span class="etiqueta">APRENDA EM ETAPAS</span><h1>Guias de estudo</h1><p>Escolha um tema, entenda a lógica e vá direto para as questões relacionadas.</p></div></div></div>
+      <div class="container secao">
+        <div class="barra-filtros"><label class="busca"><span>⌕</span><input id="busca-guia" type="search" placeholder="Buscar matéria ou assunto..."></label><select id="filtro-guia-materia" aria-label="Filtrar guias por matéria"><option value="Todas">Todas as matérias</option></select></div>
+        <div id="lista-guias" class="guias-grid"></div>
+      </div>
+    </section>
+
+    <!-- PÁGINA DE QUESTÕES -->
+    <section id="questoes" class="pagina">
+      <div class="cabecalho-pagina"><div class="container"><span class="cabecalho-icone">🧠</span><div><span class="etiqueta">PRÁTICA COM EXPLICAÇÃO</span><h1>Questões comentadas</h1><p>Use a dica, escolha uma alternativa e acompanhe cada passo da resolução.</p></div></div></div>
+      <div class="container secao area-questoes">
+        <div class="painel-filtros">
+          <label class="busca"><span>⌕</span><input id="busca-questao" type="search" placeholder="Buscar por assunto, prova ou palavra..."></label>
+          <div class="selects-filtros"><select id="filtro-vestibular" aria-label="Filtrar por vestibular"><option value="Todos">Todos os vestibulares</option></select><select id="filtro-area" aria-label="Filtrar por área"><option value="Todas">Todas as áreas</option></select><select id="filtro-nivel" aria-label="Filtrar por dificuldade"><option value="Todos">Todas as dificuldades</option><option>Fácil</option><option>Médio</option><option>Difícil</option></select><select id="filtro-complexidade" aria-label="Filtrar por complexidade"><option value="Todos">Toda complexidade</option><option value="1">Complexidade 1</option><option value="2">Complexidade 2</option><option value="3">Complexidade 3</option><option value="4">Complexidade 4</option><option value="5">Complexidade 5</option></select><select id="filtro-modo" aria-label="Escolher modo de revisão"><option value="todas">Todas as questões</option><option value="erros">Revisar erros</option><option value="favoritas">Minhas favoritas</option><option value="naoRespondidas">Não respondidas</option></select></div>
+          <div id="filtros-materias" class="filtros"></div>
+        </div>
+        <div class="status-pratica"><span id="contador-questoes">0 de 0</span><div class="barra-status"><span id="barra-questoes"></span></div><button id="embaralhar" class="botao-texto">⤨ Embaralhar</button></div>
+        <article id="card-questao" class="questao-card" aria-live="polite"></article>
+      </div>
+    </section>
+
+    <!-- PÁGINA DE DESEMPENHO -->
+    <section id="desempenho" class="pagina">
+      <div class="cabecalho-pagina"><div class="container"><span class="cabecalho-icone">📈</span><div><span class="etiqueta">ACOMPANHE SUA ROTA</span><h1>Seu desempenho</h1><p>Os dados ficam salvos somente neste navegador por meio do localStorage.</p></div></div></div>
+      <div class="container secao">
+        <div id="cards-desempenho" class="metricas-grid"></div>
+        <div class="desempenho-grid"><section class="painel-branco"><div class="titulo-painel"><div><span class="etiqueta">POR MATÉRIA</span><h2>Mapa de acertos</h2></div></div><div id="desempenho-materias"></div></section><aside class="painel-branco recomendacao"><span class="etiqueta">PRÓXIMO PASSO</span><div id="recomendacao-estudo"></div><button class="botao-primario" data-page="questoes">Praticar agora</button><button id="limpar-progresso" class="botao-perigo">Limpar meu progresso</button></aside></div>
+      </div>
+    </section>
+
+    <!-- PAINEL ADMINISTRATIVO
+         O login usa Firebase Authentication e os dados ficam no Firestore.
+         Somente UIDs cadastrados na coleção "admins" recebem permissão. -->
+    <section id="admin" class="pagina">
+      <div class="cabecalho-pagina"><div class="container"><span class="cabecalho-icone">⚙️</span><div><span class="etiqueta">BANCO DE CONTEÚDOS</span><h1>Administração</h1><p>Cadastre e amplie matérias, dificuldades, explicações e recomendações sem alterar o código.</p></div></div></div>
+      <div class="container secao">
+        <div id="firebase-aviso" class="firebase-aviso"></div>
+
+        <!-- Tela de acesso: fica oculta depois que um administrador autorizado entra. -->
+        <section id="admin-login" class="admin-login painel-branco">
+          <span class="etiqueta">ACESSO RESTRITO</span><h2>Entrar como administrador</h2>
+          <p>Use o e-mail e a senha cadastrados no Firebase Authentication.</p>
+          <form id="form-login">
+            <label>E-mail<input id="login-email" type="email" autocomplete="username" required></label>
+            <label>Senha<input id="login-senha" type="password" autocomplete="current-password" required></label>
+            <button class="botao-primario" type="submit">Entrar com e-mail e senha</button>
+            <button id="login-google" class="botao-secundario" type="button">Entrar com Google</button>
+          </form>
+          <p id="login-erro" class="mensagem-erro" role="alert"></p>
+        </section>
+
+        <!-- Conteúdo administrativo liberado apenas após verificar o UID. -->
+        <div id="admin-painel" class="admin-painel" hidden>
+          <div class="admin-barra"><div><span class="etiqueta">CONECTADO</span><strong id="admin-usuario"></strong></div><div><button id="importar-iniciais" class="botao-secundario">Importar 21 questões iniciais</button><button id="sair-admin" class="botao-perigo">Sair</button></div></div>
+          <section class="painel-branco importador-json">
+            <div class="titulo-painel"><div><span class="etiqueta">IMPORTAÇÃO EM MASSA</span><h2>Importar banco de questões JSON</h2></div></div>
+            <p>Você pode carregar diretamente o arquivo completo que acompanha o projeto ou escolher outro arquivo JSON do computador.</p>
+            <div class="opcoes-classificacao">
+              <label><input id="aplicar-classificacao" type="checkbox" checked> Classificar automaticamente área, matéria, tema, dificuldade e complexidade</label>
+              <label><input id="sobrescrever-classificacao" type="checkbox"> Reclassificar também campos específicos que já estiverem preenchidos</label>
+              <small>Por padrão, o sistema preserva classificações específicas e substitui somente valores vazios ou genéricos, como “Conhecimentos Gerais”.</small>
+            </div>
+            <div class="acoes">
+              <button id="carregar-json-completo" class="botao-secundario" type="button">Carregar banco completo do projeto</button>
+              <label class="botao-texto seletor-arquivo">Escolher JSON do computador <input id="arquivo-json" type="file" accept="application/json,.json"></label>
+            </div>
+            <div class="acoes">
+              <button id="validar-json" class="botao-secundario" type="button" disabled>Validar / pré-visualizar</button>
+              <button id="importar-json" class="botao-primario" type="button" disabled>Importar JSON no Firestore</button>
+            </div>
+            <p id="json-status" class="mensagem-form" role="status">Nenhum JSON carregado.</p>
+            <div id="json-categorias" class="json-categorias" hidden></div>
+            <progress id="json-progresso" value="0" max="100" style="width:100%"></progress>
+            <pre id="json-log" class="json-log"></pre>
+          </section>
+          <div class="admin-grid">
+            <form id="form-questao" class="painel-branco formulario-questao">
+              <input id="questao-id" type="hidden">
+              <div class="titulo-painel"><div><span class="etiqueta">EDITOR</span><h2 id="titulo-form-questao">Nova questão</h2></div><button id="nova-questao" class="botao-texto" type="button">Limpar</button></div>
+              <div class="campos-linha tres"><label>Vestibular<input id="campo-vestibular" required placeholder="ENEM"></label><label>Ano<input id="campo-ano" type="number" min="1900" max="2100" required></label><label>Número<input id="campo-numero" type="number" min="1" required></label></div>
+              <div class="campos-linha quatro"><label>Matéria<input id="campo-materia" required placeholder="Matemática"></label><label>Tema<input id="campo-tema" required placeholder="Funções"></label><label>Dificuldade<select id="campo-nivel" required><option>Fácil</option><option>Médio</option><option>Difícil</option></select></label><label>Complexidade<select id="campo-complexidade"><option value="1">1 — Direta</option><option value="2">2 — Básica</option><option value="3" selected>3 — Intermediária</option><option value="4">4 — Avançada</option><option value="5">5 — Desafio</option></select></label></div>
+              <label>Enunciado<textarea id="campo-pergunta" rows="5" required></textarea></label>
+              <fieldset><legend>Alternativas</legend><div id="campos-alternativas"></div></fieldset>
+              <label>Alternativa correta<select id="campo-resposta"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option><option value="4">E</option></select></label>
+              <label>Dica facilitadora<textarea id="campo-dica" rows="3" required></textarea></label>
+              <label>Resolução passo a passo <small>(um passo por linha)</small><textarea id="campo-resolucao" rows="5" required></textarea></label>
+              <label>Explicação final<textarea id="campo-explicacao" rows="3" required></textarea></label>
+              <label>Recomendação de estudo<textarea id="campo-recomendacao" rows="3" placeholder="Revise o guia de funções e refaça questões semelhantes."></textarea></label>
+              <label>Fonte<input id="campo-fonte" required placeholder="ENEM 2025 · questão 100"></label>
+              <label class="checkbox"><input id="campo-ativo" type="checkbox" checked> Publicar para os estudantes</label>
+              <button class="botao-primario" type="submit">Salvar no Firebase</button>
+              <p id="form-mensagem" class="mensagem-form" role="status"></p>
+            </form>
+            <aside class="painel-branco lista-admin"><div class="titulo-painel"><div><span class="etiqueta">FIRESTORE</span><h2>Questões cadastradas</h2></div><span id="total-admin" class="tag">0</span></div><label class="busca"><span>⌕</span><input id="busca-admin" type="search" placeholder="Buscar no banco..."></label><div id="lista-questoes-admin"></div></aside>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="container rodape"><div class="logo"><span class="logo-icon">⚑</span><span><strong>ROTA</strong><small>DA APROVAÇÃO</small></span></div><p>Questões selecionadas dos cadernos enviados. Consulte os materiais oficiais para o conteúdo integral.</p><small>Projeto educacional · HTML, CSS e JavaScript</small></div></footer>
+
+  <!-- Janela nativa usada para mostrar o conteúdo completo de cada guia. -->
+  <dialog id="modal-guia" class="modal-guia"><button id="fechar-guia" class="fechar-modal" aria-label="Fechar guia">×</button><div id="conteudo-guia"></div></dialog>
+  <!-- Firebase Compat funciona diretamente no navegador, sem npm e sem Node.js. -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="classificador.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

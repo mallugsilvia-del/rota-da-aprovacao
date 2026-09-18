@@ -1,0 +1,37 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "questoes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "vestibular",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "ano",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "numero",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "questoes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "materia",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "complexidade",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuração do Firebase — Rota da Aprovação</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="pagina-configuracao">
+  <main class="container secao guia-configuracao">
+    <a href="index.html">← Voltar ao site</a>
+    <span class="etiqueta">SEM NODE.JS</span>
+    <h1>Como conectar o Rota da Aprovação ao Firebase</h1>
+    <p class="resumo-destaque">Você fará esta configuração uma única vez. Depois, novas questões poderão ser cadastradas pelo painel Admin do próprio site.</p>
+
+    <ol class="etapas-configuracao">
+      <li><strong>Crie o projeto.</strong><span>Acesse o Console do Firebase, crie um projeto e adicione um aplicativo do tipo Web.</span></li>
+      <li><strong>Ative o Firestore.</strong><span>Abra “Firestore Database”, crie o banco em modo de produção e escolha uma região.</span></li>
+      <li><strong>Ative o login.</strong><span>Em “Authentication → Sign-in method”, habilite “Google” (recomendado) ou “E-mail/senha”.</span></li>
+      <li><strong>Configure o site.</strong><span>Copie o objeto firebaseConfig do Console e substitua os valores no arquivo <code>firebase-config.js</code>.</span></li>
+      <li><strong>Publique as regras.</strong><span>Copie todo o conteúdo de <code>firestore.rules</code> para “Firestore → Regras” e clique em publicar.</span></li>
+      <li><strong>Autorize seu usuário.</strong><span>Copie o UID exibido em Authentication. No Firestore, crie a coleção <code>admins</code> e um documento cujo ID seja exatamente esse UID. Adicione o campo <code>ativo</code> com valor booleano <code>true</code>.</span></li>
+      <li><strong>Abra o painel Admin.</strong><span>Entre com a conta autorizada. No painel Admin, use “Carregar banco completo do projeto” e depois “Importar JSON no Firestore”.</span></li>
+    </ol>
+
+    <section class="painel-branco">
+      <h2>Onde o site pode ser publicado?</h2>
+      <p>Como é um site estático, você pode usar Firebase Hosting, GitHub Pages ou outro serviço que entregue arquivos HTML, CSS e JavaScript. O computador da escola não precisa ter Node.js para acessar e usar o site já publicado.</p>
+    </section>
+
+    <section class="painel-branco">
+      <h2>Estrutura de cada questão</h2>
+      <p>O banco guarda vestibular, ano, número, matéria, tema, dificuldade, enunciado, alternativas, resposta, dica, etapas da resolução, explicação final, recomendação, fonte e estado de publicação.</p>
+    </section>
+  </main>
+</body>
+</html>

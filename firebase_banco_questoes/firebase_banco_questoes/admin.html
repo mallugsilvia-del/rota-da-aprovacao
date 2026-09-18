@@ -1,0 +1,6 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Importador de Questões</title><link rel="stylesheet" href="admin.css"></head>
+<body><main><h1>Importador Firestore</h1><p>Entre com a conta Google autorizada, selecione um JSON e importe. O ID da questão vira o ID do documento, evitando duplicações.</p>
+<div class="row"><button id="login">Entrar com Google</button><button id="logout" disabled>Sair</button><span id="user">Não autenticado</span></div>
+<section><label>Arquivo JSON <input id="file" type="file" accept="application/json,.json"></label><button id="preview" disabled>Validar / pré-visualizar</button><button id="import" disabled>Importar no Firestore</button></section>
+<div id="stats"></div><progress id="progress" value="0" max="100"></progress><pre id="log"></pre></main><script type="module" src="admin.js"></script></body></html>

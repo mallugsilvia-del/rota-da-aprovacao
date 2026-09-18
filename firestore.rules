@@ -1,0 +1,39 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Retorna verdadeiro quando existe um usuário autenticado.
+    function estaLogado() {
+      return request.auth != null;
+    }
+
+    // Um administrador é identificado por um documento cujo ID é seu UID.
+    function ehAdmin() {
+      return estaLogado()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.ativo == true;
+    }
+
+    match /questoes/{questaoId} {
+      // Visitantes leem somente questões publicadas; administradores veem todas.
+      allow read: if resource.data.ativo == true || ehAdmin();
+      allow create, update, delete: if ehAdmin();
+    }
+
+    match /materias/{materiaId} {
+      allow read: if true;
+      allow create, update, delete: if ehAdmin();
+    }
+
+    match /admins/{usuarioId} {
+      // Cada usuário pode verificar apenas o próprio registro administrativo.
+      allow read: if estaLogado() && request.auth.uid == usuarioId;
+      allow write: if false;
+    }
+
+    // Nega qualquer coleção que não tenha sido declarada acima.
+    match /{documento=**} {
+      allow read, write: if false;
+    }
+  }
+}

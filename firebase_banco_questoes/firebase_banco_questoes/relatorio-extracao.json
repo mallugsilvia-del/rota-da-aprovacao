@@ -1,0 +1,75 @@
+{
+  "total": 874,
+  "arquivos": [
+    {
+      "arquivo": "enem-2024-d1.json",
+      "questoes": 95,
+      "com_gabarito": 95,
+      "anuladas": 0,
+      "opcoes_extraidas": 95
+    },
+    {
+      "arquivo": "enem-2024-d2.json",
+      "questoes": 90,
+      "com_gabarito": 90,
+      "anuladas": 1,
+      "opcoes_extraidas": 84
+    },
+    {
+      "arquivo": "enem-2025-d1.json",
+      "questoes": 95,
+      "com_gabarito": 95,
+      "anuladas": 0,
+      "opcoes_extraidas": 95
+    },
+    {
+      "arquivo": "enem-2025-d2.json",
+      "questoes": 90,
+      "com_gabarito": 0,
+      "anuladas": 0,
+      "opcoes_extraidas": 85
+    },
+    {
+      "arquivo": "fuvest-2024-f1.json",
+      "questoes": 90,
+      "com_gabarito": 90,
+      "anuladas": 0,
+      "opcoes_extraidas": 86
+    },
+    {
+      "arquivo": "fuvest-2025-f1.json",
+      "questoes": 90,
+      "com_gabarito": 90,
+      "anuladas": 0,
+      "opcoes_extraidas": 88
+    },
+    {
+      "arquivo": "unicamp-2024-f1.json",
+      "questoes": 72,
+      "com_gabarito": 0,
+      "anuladas": 0,
+      "opcoes_extraidas": 69
+    },
+    {
+      "arquivo": "unicamp-2025-f1.json",
+      "questoes": 72,
+      "com_gabarito": 72,
+      "anuladas": 1,
+      "opcoes_extraidas": 71
+    },
+    {
+      "arquivo": "unesp-2024-f1.json",
+      "questoes": 90,
+      "com_gabarito": 90,
+      "anuladas": 0,
+      "opcoes_extraidas": 86
+    },
+    {
+      "arquivo": "unesp-2025-f1.json",
+      "questoes": 90,
+      "com_gabarito": 90,
+      "anuladas": 0,
+      "opcoes_extraidas": 85
+    }
+  ]
+}
