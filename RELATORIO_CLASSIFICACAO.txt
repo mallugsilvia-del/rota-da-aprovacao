@@ -1,0 +1,37 @@
+RELATÓRIO DA CLASSIFICAÇÃO AUTOMÁTICA
+====================================
+
+Total de questões: 874
+
+POR MATÉRIA
+- Biologia: 176
+- Matemática: 161
+- Física: 96
+- Português: 75
+- Geografia: 69
+- Química: 65
+- História: 53
+- Literatura: 50
+- Filosofia: 40
+- Sociologia: 28
+- Artes: 25
+- Espanhol: 13
+- Inglês: 12
+- Educação Física: 11
+
+POR DIFICULDADE
+- Fácil: 334
+- Médio: 287
+- Difícil: 253
+
+EXEMPLOS LOCALIZADOS
+- Óptica: Física
+- Segunda Guerra Mundial: História
+- Análise combinatória: Matemática
+
+Cada registro possui agora os campos area, materia, tema, conteudo, nivel,
+dificuldade, complexidade e categorias. A classificação é baseada em regras e
+palavras-chave comentadas no arquivo classificador.js.
+
+Observação: dificuldade e conteúdo são estimativas pedagógicas. O campo
+confiancaClassificacao ajuda a priorizar uma eventual revisão humana.

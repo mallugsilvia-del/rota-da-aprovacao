@@ -11,15 +11,16 @@
     <a href="index.html">← Voltar ao site</a>
     <span class="etiqueta">SEM NODE.JS</span>
     <h1>Como conectar o Rota da Aprovação ao Firebase</h1>
-    <p class="resumo-destaque">Você fará esta configuração uma única vez. Depois, novas questões poderão ser cadastradas pelo painel Admin do próprio site.</p>
+    <p class="resumo-destaque">Você fará esta configuração uma única vez. Depois, estudantes poderão criar contas e sincronizar o histórico, enquanto administradores autorizados gerenciam as questões.</p>
 
     <ol class="etapas-configuracao">
       <li><strong>Crie o projeto.</strong><span>Acesse o Console do Firebase, crie um projeto e adicione um aplicativo do tipo Web.</span></li>
       <li><strong>Ative o Firestore.</strong><span>Abra “Firestore Database”, crie o banco em modo de produção e escolha uma região.</span></li>
-      <li><strong>Ative o login.</strong><span>Em “Authentication → Sign-in method”, habilite “Google” (recomendado) ou “E-mail/senha”.</span></li>
+      <li><strong>Ative o login.</strong><span>Em “Authentication → Sign-in method”, habilite “E-mail/senha”. Se desejar, habilite também o Google.</span></li>
+      <li><strong>Autorize o domínio.</strong><span>Em “Authentication → Settings → Authorized domains”, inclua o domínio publicado, como <code>usuario.github.io</code>.</span></li>
       <li><strong>Configure o site.</strong><span>Copie o objeto firebaseConfig do Console e substitua os valores no arquivo <code>firebase-config.js</code>.</span></li>
       <li><strong>Publique as regras.</strong><span>Copie todo o conteúdo de <code>firestore.rules</code> para “Firestore → Regras” e clique em publicar.</span></li>
-      <li><strong>Autorize seu usuário.</strong><span>Copie o UID exibido em Authentication. No Firestore, crie a coleção <code>admins</code> e um documento cujo ID seja exatamente esse UID. Adicione o campo <code>ativo</code> com valor booleano <code>true</code>.</span></li>
+      <li><strong>Autorize seu administrador.</strong><span>Crie primeiro a conta no Authentication, copie o UID exibido e, no Firestore, crie a coleção <code>admins</code> com um documento cujo ID seja exatamente esse UID. Adicione o campo <code>ativo</code> com valor booleano <code>true</code>.</span></li>
       <li><strong>Abra o painel Admin.</strong><span>Entre com a conta autorizada. No painel Admin, use “Carregar banco completo do projeto” e depois “Importar JSON no Firestore”.</span></li>
     </ol>
 
@@ -30,7 +31,12 @@
 
     <section class="painel-branco">
       <h2>Estrutura de cada questão</h2>
-      <p>O banco guarda vestibular, ano, número, matéria, tema, dificuldade, enunciado, alternativas, resposta, dica, etapas da resolução, explicação final, recomendação, fonte e estado de publicação.</p>
+      <p>O banco guarda vestibular, ano, número, matéria, tema, dificuldade, enunciado, alternativas, resposta, dica, etapas da resolução, explicação final, recomendação, fonte, imagem original e estado de publicação.</p>
+    </section>
+
+    <section class="painel-branco">
+      <h2>Quando o login disser “e-mail ou senha inválidos”</h2>
+      <p>Um registro em <code>admins/{UID}</code> não cria a conta de acesso. Crie a conta primeiro, use “Esqueci minha senha” se ela já existir e confira se E-mail/senha está habilitado. Estudantes comuns não precisam de documento em <code>admins</code>.</p>
     </section>
   </main>
 </body>

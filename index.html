@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<!--Rota-da-Aprovacao-Firebase-CORRIGIDO
+<!--Rota-da-Aprovacao-V5
   ROTA DA APROVAÇÃO
-  Projeto estático: não usa frameworks, servidor ou banco de dados.
-  A estrutura fica neste HTML, a aparência em style.css e a lógica em script.js.
+  Interface estática conectada ao Firebase para contas, histórico e conteúdos.
 -->
 <html lang="pt-BR">
 <head>
@@ -16,9 +15,9 @@
   <!-- Cabeçalho fixo. Os atributos data-page são lidos pelo JavaScript. -->
   <header class="topbar">
     <div class="container topbar-content">
-      <button class="logo" data-page="inicio" aria-label="Ir para o início"><span class="logo-icon" aria-hidden="true">⚑</span><span><strong>ROTA</strong><small>DA APROVAÇÃO</small></span></button>
+      <button class="logo" data-page="inicio" aria-label="Ir para o início"><span class="logo-icon" aria-hidden="true"><i></i></span><span><strong>ROTA</strong><small>DA APROVAÇÃO</small></span></button>
       <nav id="menu-principal" class="menu" aria-label="Menu principal">
-        <button class="active" data-page="inicio">Início</button><button data-page="avisos">Avisos</button><button data-page="agenda">Agenda</button><button data-page="estudos">Guias</button><button data-page="questoes">Questões</button><button data-page="desempenho">Desempenho</button><button data-page="admin">Admin</button>
+        <button class="active" data-page="inicio">Início</button><button data-page="avisos">Avisos</button><button data-page="agenda">Calendário 2026</button><button data-page="estudos">Guias</button><button data-page="questoes">Questões</button><button data-page="desempenho">Desempenho</button><button id="nav-conta" class="nav-conta" data-page="conta"><span class="nav-avatar" id="avatar-nav" aria-hidden="true"></span><span id="nav-conta-texto">Entrar</span></button><button data-page="admin">Admin</button>
       </nav>
       <button id="menu-mobile" class="menu-mobile" aria-label="Abrir menu" aria-expanded="false">☰</button>
     </div>
@@ -30,30 +29,53 @@
       <div class="hero">
         <div class="container hero-grid">
           <div class="hero-texto">
-            <span class="etiqueta">✦ CONTEÚDO, PRÁTICA E EVOLUÇÃO</span>
-            <h1>Estude com direção.<br><em>Aprenda de verdade.</em></h1>
-            <p>Guias objetivos e questões de ENEM, Fuvest, Unesp e Unicamp com dica, resolução passo a passo e revisão inteligente.</p>
-            <div class="acoes"><button class="botao-primario" data-page="questoes">▶ Resolver questões</button><button class="botao-secundario" data-page="estudos">Explorar guias</button></div>
+            <span class="etiqueta">✦ SUA PLATAFORMA DE APRENDIZAGEM</span>
+            <h1>Sua aprovação começa com uma <em>rota inteligente.</em></h1>
+            <p>Questões reais, explicações passo a passo e um histórico que transforma cada resposta em uma próxima ação.</p>
+            <div class="acoes"><button class="botao-primario" data-page="questoes"><span aria-hidden="true">▶</span> Resolver questões</button><button class="botao-secundario" data-page="estudos">Explorar guias</button></div>
             <div class="hero-numeros" aria-label="Resumo do conteúdo">
-              <span><strong id="total-questoes-hero">21</strong><small>questões guiadas</small></span><span><strong>4</strong><small>vestibulares</small></span><span><strong id="total-guias-hero">8</strong><small>guias de estudo</small></span>
+              <span><i aria-hidden="true">✓</i><strong id="total-questoes-hero">21</strong><small>questões guiadas</small></span><span><i aria-hidden="true">⌁</i><strong>4</strong><small>vestibulares</small></span><span><i aria-hidden="true">∞</i><strong id="total-guias-hero">8</strong><small>guias de estudo</small></span>
             </div>
           </div>
           <aside class="painel-hero" aria-label="Seu progresso">
-            <div class="painel-topo"><span>SEU PROGRESSO</span><span class="pulso">● ao vivo</span></div>
-            <div class="anel-progresso" id="anel-progresso"><strong id="percentual-hero">0%</strong><small>concluído</small></div>
-            <div class="mini-estatisticas"><span><strong id="acertos-hero">0</strong><small>acertos</small></span><span><strong id="sequencia-hero">0</strong><small>sequência</small></span><span><strong id="favoritos-hero">0</strong><small>favoritas</small></span></div>
-            <button class="proxima-acao" data-page="questoes"><span><small>PRÓXIMA AÇÃO</small><strong>Continue sua prática</strong></span><b>›</b></button>
+            <div class="orbital-stage">
+              <span class="orbita-icone orbita-um" aria-hidden="true">✓</span>
+              <span class="orbita-icone orbita-dois" aria-hidden="true">✎</span>
+              <span class="orbita-icone orbita-tres" aria-hidden="true">↗</span>
+              <span class="orbita-icone orbita-quatro" aria-hidden="true">?</span>
+              <div class="anel-progresso" id="anel-progresso">
+                <div class="ilustracao-estudante" id="avatar-hero-preview" aria-hidden="true"></div>
+                <span class="progresso-badge"><strong id="percentual-hero">0%</strong><small>concluído</small></span>
+              </div>
+            </div>
+            <div class="painel-resumo">
+              <div class="painel-topo"><span>SEU PROGRESSO</span><span class="pulso">● sincronizado</span></div>
+              <div class="mini-estatisticas"><span><strong id="acertos-hero">0</strong><small>acertos</small></span><span><strong id="sequencia-hero">0</strong><small>sequência</small></span><span><strong id="favoritos-hero">0</strong><small>favoritas</small></span></div>
+              <button type="button" id="escolher-avatar-hero" class="escolher-avatar-hero"><span aria-hidden="true">✦</span> Escolher minha silhueta</button>
+              <button class="proxima-acao" data-page="questoes"><span><small>PRÓXIMA AÇÃO</small><strong>Continue sua prática</strong></span><b>›</b></button>
+            </div>
           </aside>
         </div>
       </div>
 
       <section class="container secao">
-        <div class="titulo-secao"><div><span class="etiqueta">COMECE POR AQUI</span><h2>Uma rota completa de aprendizagem</h2></div></div>
+        <div class="titulo-secao"><div><span class="etiqueta">TRILHAS EM DESTAQUE</span><h2>Escolha seu próximo passo</h2><p class="titulo-apoio">Uma experiência contínua: aprenda, pratique e use seus resultados para revisar melhor.</p></div></div>
         <div class="recursos-grid">
-          <button class="recurso-card" data-page="estudos"><span class="recurso-icone lilas">⌁</span><b>1</b><h3>Estude o conteúdo</h3><p>Resumo, conceitos-chave, estratégia e exemplo.</p><small>Abrir guias →</small></button>
-          <button class="recurso-card" data-page="questoes"><span class="recurso-icone coral">?</span><b>2</b><h3>Pratique com apoio</h3><p>Peça uma dica antes de conferir a resposta.</p><small>Começar prática →</small></button>
-          <button class="recurso-card" data-page="desempenho"><span class="recurso-icone verde">↗</span><b>3</b><h3>Revise seus pontos</h3><p>Retome erros e favoritas salvos neste aparelho.</p><small>Ver desempenho →</small></button>
+          <button class="recurso-card" data-page="estudos"><span class="recurso-preview preview-guias" aria-hidden="true"><i>Aa</i><span><b></b><b></b><b></b></span></span><span class="recurso-icone lilas">⌁</span><b>01</b><h3>Estude o conteúdo</h3><p>Resumo, conceitos-chave, estratégia e exemplo.</p><small>Abrir guias <i>→</i></small></button>
+          <button class="recurso-card" data-page="questoes"><span class="recurso-preview preview-questoes" aria-hidden="true"><i>?</i><span><b>A</b><b>B</b><b>C</b></span></span><span class="recurso-icone coral">?</span><b>02</b><h3>Pratique com apoio</h3><p>Peça uma dica antes de conferir a resposta.</p><small>Começar prática <i>→</i></small></button>
+          <button class="recurso-card" data-page="desempenho"><span class="recurso-preview preview-desempenho" aria-hidden="true"><span><b></b><b></b><b></b><b></b></span><i>+12%</i></span><span class="recurso-icone verde">↗</span><b>03</b><h3>Revise seus pontos</h3><p>Retome erros e favoritas salvos neste aparelho.</p><small>Ver desempenho <i>→</i></small></button>
         </div>
+      </section>
+
+      <section class="container oportunidades-home" aria-label="Oportunidades com inscrições em andamento">
+        <div class="oportunidades-chamada">
+          <span class="etiqueta">OPORTUNIDADES 2026 · FONTES OFICIAIS</span>
+          <h2>Seu futuro tem data marcada.</h2>
+          <p>Vestibulares e concursos com calendário verificado: veja prazos de inscrição e provas para não perder oportunidades.</p>
+          <div class="oportunidades-metricas"><span><strong id="oportunidades-abertas">—</strong> inscrições em andamento</span><span><strong id="oportunidades-provas">—</strong> provas por acontecer</span></div>
+          <button type="button" class="botao-primario" data-page="agenda">Ver calendário completo <span aria-hidden="true">→</span></button>
+        </div>
+        <div id="oportunidades-home-cards" class="oportunidades-home-cards"></div>
       </section>
 
       <section class="fundo-suave"><div class="container duas-colunas">
@@ -68,10 +90,23 @@
       <div class="container secao"><div id="lista-avisos" class="lista-avisos"></div></div>
     </section>
 
-    <!-- PÁGINA DE AGENDA -->
+    <!-- AGENDA: calendário de editais oficiais confirmado em 15/10/2026. -->
     <section id="agenda" class="pagina">
-      <div class="cabecalho-pagina"><div class="container"><span class="cabecalho-icone">📅</span><div><span class="etiqueta">PLANEJE-SE</span><h1>Calendário de vestibulares</h1><p>Transforme cada data em uma ação e confirme sempre no edital oficial.</p></div></div></div>
-      <div class="container secao agenda-grid"><aside class="resumo-agenda"><span>PRÓXIMA AÇÃO</span><strong>Organize os editais</strong><p>Anote inscrições, pagamentos, locais e dias de prova.</p><div class="dica"><b>◷ Dica</b><small>Programe dois lembretes: sete dias e um dia antes.</small></div></aside><div><div id="lista-datas" class="lista-cards"></div><p class="observacao">Datas demonstrativas do projeto. Consulte os portais oficiais antes de tomar qualquer decisão.</p></div></div>
+      <div class="cabecalho-pagina agenda-cabecalho"><div class="container"><span class="cabecalho-icone" aria-hidden="true">◷</span><div><span class="etiqueta">VESTIBULARES E CONCURSOS</span><h1>Calendário de oportunidades</h1><p>Inscrições, prazos e provas de 2026 e processos seletivos para ingresso em 2027.</p></div></div></div>
+      <div class="container secao agenda-nova">
+        <div class="agenda-topo">
+          <div><span class="etiqueta">PAINEL DE OPORTUNIDADES</span><h2>Encontre seu próximo desafio</h2><p class="titulo-apoio">Atualização editorial: 15 de outubro de 2026. O status das inscrições é calculado pela data, mas alterações exigem consulta ao edital.</p></div>
+          <div class="agenda-numeros"><span><b id="agenda-total">0</b><small>oportunidades</small></span><span><b id="agenda-abertas">0</b><small>inscrições abertas</small></span></div>
+        </div>
+        <div class="agenda-filtros" aria-label="Filtrar oportunidades">
+          <label class="busca"><span aria-hidden="true">⌕</span><input id="busca-evento" type="search" placeholder="Buscar Enem, Unesp, concurso..." aria-label="Buscar oportunidades"></label>
+          <label><span>Tipo</span><select id="filtro-evento-tipo"><option value="todos">Todos</option><option value="vestibular">Vestibulares</option><option value="concurso">Concursos</option></select></label>
+          <label><span>Situação</span><select id="filtro-evento-status"><option value="todos">Todas as situações</option><option value="aberta">Inscrições abertas</option><option value="prova">Inscrições encerradas · prova futura</option><option value="encerrada">Já realizados</option></select></label>
+        </div>
+        <div id="resultado-agenda" class="resultado-agenda" role="status" aria-live="polite"></div>
+        <div id="lista-datas" class="agenda-cards"></div>
+        <p class="observacao agenda-nota"><strong>Importante:</strong> este é um calendário informativo, não um monitoramento em tempo real. Fontes consultadas em 15/10/2026. Os editais e retificações nos links oficiais prevalecem sobre as datas mostradas aqui.</p>
+      </div>
     </section>
 
     <!-- PÁGINA DE GUIAS DE ESTUDO -->
@@ -87,9 +122,10 @@
     <section id="questoes" class="pagina">
       <div class="cabecalho-pagina"><div class="container"><span class="cabecalho-icone">🧠</span><div><span class="etiqueta">PRÁTICA COM EXPLICAÇÃO</span><h1>Questões comentadas</h1><p>Use a dica, escolha uma alternativa e acompanhe cada passo da resolução.</p></div></div></div>
       <div class="container secao area-questoes">
+        <div id="aviso-sincronizacao" class="aviso-sincronizacao"><span>☁</span><p><strong>Seu progresso está neste aparelho.</strong> <button class="link-inline" data-page="conta">Entre ou crie uma conta</button> para continuar de qualquer dispositivo.</p></div>
         <div class="painel-filtros">
           <label class="busca"><span>⌕</span><input id="busca-questao" type="search" placeholder="Buscar por assunto, prova ou palavra..."></label>
-          <div class="selects-filtros"><select id="filtro-vestibular" aria-label="Filtrar por vestibular"><option value="Todos">Todos os vestibulares</option></select><select id="filtro-area" aria-label="Filtrar por área"><option value="Todas">Todas as áreas</option></select><select id="filtro-nivel" aria-label="Filtrar por dificuldade"><option value="Todos">Todas as dificuldades</option><option>Fácil</option><option>Médio</option><option>Difícil</option></select><select id="filtro-complexidade" aria-label="Filtrar por complexidade"><option value="Todos">Toda complexidade</option><option value="1">Complexidade 1</option><option value="2">Complexidade 2</option><option value="3">Complexidade 3</option><option value="4">Complexidade 4</option><option value="5">Complexidade 5</option></select><select id="filtro-modo" aria-label="Escolher modo de revisão"><option value="todas">Todas as questões</option><option value="erros">Revisar erros</option><option value="favoritas">Minhas favoritas</option><option value="naoRespondidas">Não respondidas</option></select></div>
+          <div class="selects-filtros"><select id="filtro-vestibular" aria-label="Filtrar por vestibular"><option value="Todos">Todos os vestibulares</option></select><select id="filtro-area" aria-label="Filtrar por área"><option value="Todas">Todas as áreas</option></select><select id="filtro-conteudo" aria-label="Filtrar por conteúdo"><option value="Todos">Todos os conteúdos</option></select><select id="filtro-nivel" aria-label="Filtrar por dificuldade"><option value="Todos">Todas as dificuldades</option><option>Fácil</option><option>Médio</option><option>Difícil</option></select><select id="filtro-complexidade" aria-label="Filtrar por complexidade"><option value="Todos">Toda complexidade</option><option value="1">Complexidade 1</option><option value="2">Complexidade 2</option><option value="3">Complexidade 3</option><option value="4">Complexidade 4</option><option value="5">Complexidade 5</option></select><select id="filtro-visual" aria-label="Filtrar questões com elementos visuais"><option value="todas">Com ou sem imagem</option><option value="visuais">Questões visuais</option><option value="texto">Somente texto</option></select><select id="filtro-modo" aria-label="Escolher modo de revisão"><option value="todas">Todas as questões</option><option value="erros">Revisar erros</option><option value="favoritas">Minhas favoritas</option><option value="naoRespondidas">Não respondidas</option></select></div>
           <div id="filtros-materias" class="filtros"></div>
         </div>
         <div class="status-pratica"><span id="contador-questoes">0 de 0</span><div class="barra-status"><span id="barra-questoes"></span></div><button id="embaralhar" class="botao-texto">⤨ Embaralhar</button></div>
@@ -99,10 +135,60 @@
 
     <!-- PÁGINA DE DESEMPENHO -->
     <section id="desempenho" class="pagina">
-      <div class="cabecalho-pagina"><div class="container"><span class="cabecalho-icone">📈</span><div><span class="etiqueta">ACOMPANHE SUA ROTA</span><h1>Seu desempenho</h1><p>Os dados ficam salvos somente neste navegador por meio do localStorage.</p></div></div></div>
+      <div class="cabecalho-pagina"><div class="container"><span class="cabecalho-icone">📈</span><div><span class="etiqueta">ACOMPANHE SUA ROTA</span><h1>Seu desempenho</h1><p>O progresso é salvo neste aparelho e sincronizado quando você entra na sua conta.</p></div></div></div>
       <div class="container secao">
         <div id="cards-desempenho" class="metricas-grid"></div>
         <div class="desempenho-grid"><section class="painel-branco"><div class="titulo-painel"><div><span class="etiqueta">POR MATÉRIA</span><h2>Mapa de acertos</h2></div></div><div id="desempenho-materias"></div></section><aside class="painel-branco recomendacao"><span class="etiqueta">PRÓXIMO PASSO</span><div id="recomendacao-estudo"></div><button class="botao-primario" data-page="questoes">Praticar agora</button><button id="limpar-progresso" class="botao-perigo">Limpar meu progresso</button></aside></div>
+      </div>
+    </section>
+
+    <!-- CONTA DO ESTUDANTE -->
+    <section id="conta" class="pagina">
+      <div class="cabecalho-pagina conta-cabecalho"><div class="container"><span class="cabecalho-icone">👤</span><div><span class="etiqueta">SUA ROTA, SEMPRE COM VOCÊ</span><h1>Conta do estudante</h1><p>Salve histórico, favoritas, sequência e desempenho em todos os seus dispositivos.</p></div></div></div>
+      <div class="container secao conta-layout">
+        <section id="conta-desconectada" class="auth-shell">
+          <div class="auth-beneficios">
+            <span class="etiqueta">PROGRESSO SINCRONIZADO</span>
+            <h2>Estude hoje. Continue exatamente de onde parou.</h2>
+            <p>Uma conta gratuita mantém sua evolução organizada sem misturar acesso de estudante com o painel administrativo.</p>
+            <ul><li><span>✓</span> Histórico das questões respondidas</li><li><span>✓</span> Erros e favoritas para revisar</li><li><span>✓</span> Sequência e taxa de acertos</li></ul>
+          </div>
+          <div class="auth-card painel-branco">
+            <div class="auth-abas" role="tablist" aria-label="Entrar ou criar conta"><button class="active" type="button" data-auth-tab="login">Entrar</button><button type="button" data-auth-tab="cadastro">Criar conta</button></div>
+            <form id="form-login-aluno" class="auth-form">
+              <div><span class="etiqueta">BEM-VINDO DE VOLTA</span><h2>Entre na sua conta</h2></div>
+              <label>E-mail<input id="aluno-login-email" type="email" autocomplete="username" placeholder="voce@email.com" required></label>
+              <label>Senha<input id="aluno-login-senha" type="password" autocomplete="current-password" minlength="6" placeholder="Sua senha" required></label>
+              <button class="botao-primario" type="submit">Entrar e sincronizar</button>
+              <button id="recuperar-senha" class="botao-texto" type="button">Esqueci minha senha</button>
+            </form>
+            <form id="form-cadastro-aluno" class="auth-form" hidden>
+              <div><span class="etiqueta">PRIMEIRO ACESSO</span><h2>Crie sua conta gratuita</h2></div>
+              <label>Nome<input id="aluno-cadastro-nome" autocomplete="name" placeholder="Como podemos chamar você?" required></label>
+              <label>E-mail<input id="aluno-cadastro-email" type="email" autocomplete="email" placeholder="voce@email.com" required></label>
+              <label>Senha<input id="aluno-cadastro-senha" type="password" autocomplete="new-password" minlength="6" placeholder="No mínimo 6 caracteres" required></label>
+              <label>Confirmar senha<input id="aluno-cadastro-confirmar" type="password" autocomplete="new-password" minlength="6" placeholder="Repita a senha" required></label>
+              <div class="cadastro-avatar-row"><div id="avatar-cadastro-preview" class="mini-avatar"></div><div><strong>Sua silhueta de perfil</strong><p>Escolha um busto para representar você.</p><button id="escolher-avatar-cadastro" type="button" class="botao-texto">Personalizar avatar →</button></div></div>
+              <button class="botao-primario" type="submit">Criar conta e salvar progresso</button>
+            </form>
+            <div class="divisor"><span>ou</span></div>
+            <button id="login-aluno-google" class="botao-google" type="button"><span>G</span> Continuar com Google</button>
+            <p id="conta-mensagem" class="mensagem-conta" role="status" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <section id="conta-conectada" hidden>
+          <div class="perfil-hero">
+            <div id="aluno-avatar" class="aluno-avatar" aria-label="Avatar selecionado"></div>
+            <div><span class="etiqueta">CONTA DO ESTUDANTE</span><h2 id="aluno-nome">Estudante</h2><p id="aluno-email"></p><small id="status-sincronizacao">Progresso sincronizado</small></div>
+            <div class="perfil-acoes"><button id="escolher-avatar-conta" class="botao-secundario" type="button">Mudar silhueta</button><button id="sair-conta" class="botao-secundario" type="button">Sair da conta</button></div>
+          </div>
+          <div id="cards-conta" class="metricas-grid conta-metricas"></div>
+          <div class="conta-conteudo-grid">
+            <section class="painel-branco"><div class="titulo-painel"><div><span class="etiqueta">ATIVIDADE RECENTE</span><h2>Histórico de questões</h2></div><button class="botao-texto" data-page="questoes">Continuar prática →</button></div><div id="historico-conta" class="historico-conta"></div></section>
+            <aside class="painel-branco revisao-conta"><span class="etiqueta">REVISÃO INTELIGENTE</span><h2>Transforme erros em aprendizado</h2><p>Abra diretamente suas respostas incorretas ou retome o que marcou para estudar depois.</p><button id="abrir-erros-conta" class="botao-primario" type="button">Revisar meus erros</button><button id="abrir-favoritas-conta" class="botao-secundario" type="button">Ver favoritas</button></aside>
+          </div>
+        </section>
       </div>
     </section>
 
@@ -124,6 +210,7 @@
             <button class="botao-primario" type="submit">Entrar com e-mail e senha</button>
             <button id="login-google" class="botao-secundario" type="button">Entrar com Google</button>
           </form>
+          <p class="admin-ajuda">Primeiro acesso ou senha esquecida? <button class="link-inline" type="button" data-page="conta">Criar ou recuperar a conta</button>. Depois, autorize o UID na coleção <code>admins</code>.</p>
           <p id="login-erro" class="mensagem-erro" role="alert"></p>
         </section>
 
@@ -165,6 +252,8 @@
               <label>Explicação final<textarea id="campo-explicacao" rows="3" required></textarea></label>
               <label>Recomendação de estudo<textarea id="campo-recomendacao" rows="3" placeholder="Revise o guia de funções e refaça questões semelhantes."></textarea></label>
               <label>Fonte<input id="campo-fonte" required placeholder="ENEM 2025 · questão 100"></label>
+              <label>Imagem ou página original<input id="campo-imagemPagina" placeholder="imagens/enem-2025-d1/pagina-012.webp"></label>
+              <label class="checkbox"><input id="campo-requerImagem" type="checkbox"> A imagem é necessária para resolver a questão</label>
               <label class="checkbox"><input id="campo-ativo" type="checkbox" checked> Publicar para os estudantes</label>
               <button class="botao-primario" type="submit">Salvar no Firebase</button>
               <p id="form-mensagem" class="mensagem-form" role="status"></p>
@@ -176,10 +265,16 @@
     </section>
   </main>
 
-  <footer><div class="container rodape"><div class="logo"><span class="logo-icon">⚑</span><span><strong>ROTA</strong><small>DA APROVAÇÃO</small></span></div><p>Questões selecionadas dos cadernos enviados. Consulte os materiais oficiais para o conteúdo integral.</p><small>Projeto educacional · HTML, CSS e JavaScript</small></div></footer>
+  <footer><div class="container rodape"><div class="logo"><span class="logo-icon" aria-hidden="true"><i></i></span><span><strong>ROTA</strong><small>DA APROVAÇÃO</small></span></div><p>Questões selecionadas dos cadernos enviados. Consulte os materiais oficiais para o conteúdo integral.</p><small>Projeto educacional · HTML, CSS e JavaScript</small></div></footer>
 
   <!-- Janela nativa usada para mostrar o conteúdo completo de cada guia. -->
   <dialog id="modal-guia" class="modal-guia"><button id="fechar-guia" class="fechar-modal" aria-label="Fechar guia">×</button><div id="conteudo-guia"></div></dialog>
+  <dialog id="modal-imagem" class="modal-imagem"><div class="modal-imagem-topo"><div><span class="etiqueta">PÁGINA ORIGINAL</span><strong id="titulo-imagem">Figura da questão</strong></div><button id="fechar-imagem" class="fechar-modal" aria-label="Fechar imagem">×</button></div><div class="modal-imagem-corpo"><img id="imagem-ampliada" alt="Página original da questão"></div></dialog>
+  <dialog id="modal-avatar" class="modal-avatar" aria-labelledby="titulo-selecao-avatar">
+    <div class="avatar-modal-topo"><div><span class="etiqueta">MEU PERFIL</span><h2 id="titulo-selecao-avatar">Escolha sua silhueta</h2><p>Avatares em formato de busto. Você pode alterar quando quiser.</p></div><button id="fechar-avatar" type="button" class="avatar-fechar" aria-label="Fechar seleção de avatar">×</button></div>
+    <div id="grade-avatares" class="avatar-grid" role="radiogroup" aria-label="Silhuetas disponíveis"></div>
+    <div class="avatar-modal-rodape"><p id="avatar-feedback" role="status">Sua escolha fica salva neste aparelho ou na sua conta conectada.</p><button type="button" id="salvar-avatar" class="botao-primario">Salvar avatar escolhido</button></div>
+  </dialog>
   <!-- Firebase Compat funciona diretamente no navegador, sem npm e sem Node.js. -->
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>

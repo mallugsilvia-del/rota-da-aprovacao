@@ -31,6 +31,14 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /usuarios/{usuarioId} {
+      // O estudante lê e atualiza somente o próprio perfil e histórico.
+      // Administradores podem ler ou excluir em atendimentos de suporte.
+      allow read: if estaLogado() && (request.auth.uid == usuarioId || ehAdmin());
+      allow create, update: if estaLogado() && request.auth.uid == usuarioId;
+      allow delete: if estaLogado() && (request.auth.uid == usuarioId || ehAdmin());
+    }
+
     // Nega qualquer coleção que não tenha sido declarada acima.
     match /{documento=**} {
       allow read, write: if false;

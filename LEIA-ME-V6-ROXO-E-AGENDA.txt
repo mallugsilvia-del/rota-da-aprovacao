@@ -1,0 +1,63 @@
+ROTA DA APROVAÇÃO — V6 | ROXO, AVATARES E CALENDÁRIO 2026
+Atualização do projeto original V5, sem remover o banco de questões ou as imagens.
+
+O QUE MUDOU
+
+1) Layout: roxo/violeta na navegação, início, botões, cartões, títulos,
+   página da conta, painel de desempenho e administração. Mantidos os
+   recursos de questões, guias, histórico, Firebase e painel administrativo.
+
+2) Avatar: a ilustração fixa de estudante no destaque inicial foi substituída
+   por uma silhueta de busto. Clique em "Escolher minha silhueta" na página
+   inicial, em "Personalizar avatar" durante o cadastro ou em "Mudar
+   silhueta" na conta. Há oito opções. A escolha é guardada no navegador;
+   quando há conta autenticada, também entra em usuarios/{uid}.avatar no
+   Firestore, respeitando as regras do arquivo firestore.rules.
+
+3) Calendário: página "Calendário 2026" com pesquisa por nome,
+   filtro vestibular/concurso e filtro pela situação das inscrições.
+   O site também mostra os próximos prazos na página inicial e em Avisos.
+   O navegador calcula se o período de inscrição já acabou, conforme as
+   datas registradas no script, sem consultar os editais automaticamente.
+
+LISTA CURADA DE OPORTUNIDADES (CONFERIDA EM 15/10/2026)
+- Unesp 2027: inscrições 04/09–20/10/2026; prova 22/11/2026
+  https://www.vunesp.com.br/VNSP2514
+- Etec 2027: inscrições 02/09–03/11/2026, às 20h; prova 06/12/2026
+  https://vestibulinho.etec.sp.gov.br/calendario/
+- Fatec 2027: inscrições 14/09–06/11/2026, às 20h; prova 13/12/2026
+  https://vestibular.fatec.sp.gov.br/calendario/
+- CGU Auditor 2026: inscrições até 04/11/2026; prova prevista 13/12/2026
+  https://www.cebraspe.org.br/concursos/cgu_26_affc
+- Câmara dos Deputados, Analista 2026: inscrições 15/10–17/11/2026,
+  até as 18h de Brasília; provas previstas 17/01/2027
+  https://www.cebraspe.org.br/concursos/cd_26_analista
+- Unicamp 2027: inscrição encerrada em 08/09/2026; primeira fase 18/10
+  https://www.unicamp.br/noticias/2026/08/31/unicamp-prorroga-inscricoes-para-o-vestibular-2027-ate-8-de-setembro/
+- Fuvest 2027: inscrição encerrada em 09/10/2026; 1ª fase 01/11
+  https://www.fuvest.br/fuvest-2027-fuvest-divulga-cronograma-completo-do-vestibular-2027/
+- Enem 2026: inscrição encerrada em 12/06/2026; provas 08 e 15/11
+  https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/orientacoes/cronograma
+
+IMPORTANTE: lista não exaustiva. Datas sujeitas a retificação pelos órgãos
+responsáveis. "Inscrições abertas" é uma indicação baseada no intervalo
+registrado, não uma consulta em tempo real. Confira SEMPRE os sites oficiais.
+
+COMO ALTERAR / INCLUIR DATAS
+No arquivo script.js, encontre const EVENTOS_2026 e inclua outro objeto com
+id, nome, instituicao, categoria (vestibular ou concurso), inicio, fim,
+provas (lista de datas AAAA-MM-DD), detalhe, url e fonte. Opcional: horaFim.
+Não é necessário instalar Node.js ou React para rodar o portal.
+
+PUBLICAÇÃO
+Extraia o ZIP e publique a pasta com index.html, style.css, script.js,
+firebase-config.js, classificador.js, firestore.rules, banco-questoes/ e
+imagens/. Em GitHub Pages, preserve os caminhos relativos.
+
+VERIFICAÇÃO
+- node --check script.js (sem erros de sintaxe)
+- node tools/test-interface.js (sem falhas)
+- Testes manuais automatizados em navegador: 8 avatares, seleção do perfil,
+  8 oportunidades, 5 inscrições abertas em 15/10, filtros, desktop e móvel.
+- Verificado: 874 questões no banco completo, 874 referências de imagem
+  existentes (algumas páginas são compartilhadas).

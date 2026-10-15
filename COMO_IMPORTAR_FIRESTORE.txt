@@ -1,16 +1,21 @@
-ROTA DA APROVAÇÃO — IMPORTAÇÃO FIRESTORE
+ROTA DA APROVAÇÃO V5 — CONTAS, HISTÓRICO E IMPORTAÇÃO FIRESTORE
 
 1. Publique TODO o conteúdo desta pasta no GitHub Pages.
-2. Firebase Authentication: ative Google (ou E-mail/senha).
-3. Firestore: mantenha o banco (default).
-4. Crie admins/SEU_UID com campo ativo (boolean) = true.
-5. Abra o site e clique em Admin.
-6. Faça login.
-7. Clique em “Carregar banco completo do projeto”.
-8. Deixe marcada a opção “Classificar automaticamente”. O classificador separa
+2. No Firebase Authentication, ative E-mail/senha. Ative Google também se quiser
+   mostrar o botão “Continuar com Google”.
+3. Em Authentication > Settings > Authorized domains, inclua o domínio em que o
+   site foi publicado (por exemplo: usuario.github.io).
+4. No Firestore, mantenha o banco (default) e PUBLIQUE o arquivo firestore.rules.
+   Essas regras liberam usuarios/{UID} somente para o próprio estudante e mantêm
+   questoes/materias restritas aos administradores.
+5. Crie a conta que será administradora pelo site ou pelo Authentication.
+6. Copie o UID dessa conta e crie admins/SEU_UID com ativo (boolean) = true.
+7. Abra o site, clique em Admin e faça login com essa mesma conta.
+8. Clique em “Carregar banco completo do projeto”.
+9. Deixe marcada a opção “Classificar automaticamente”. O classificador separa
    área, matéria, tema, dificuldade e complexidade por regras de palavras-chave.
-9. Confira a prévia por categoria e clique em “Validar / pré-visualizar”.
-10. Clique em “Importar JSON no Firestore”.
+10. Confira a prévia por categoria e clique em “Validar / pré-visualizar”.
+11. Clique em “Importar JSON no Firestore”.
 
 O arquivo está em banco-questoes/banco-questoes-completo.json.
 A pasta imagens também deve ser publicada na raiz do site.
@@ -23,3 +28,19 @@ IMPORTANTE
 - Marque “Reclassificar também campos específicos” somente para recalcular tudo.
 - As novas matérias e seus temas são cadastrados automaticamente na coleção materias.
 - Para ampliar as regras, edite REGRAS_MATERIAS e REGRAS_TEMAS em classificador.js.
+- Todas as 874 questões possuem referência para a página original. As 313 que
+  dependem da figura abrem a imagem diretamente no cartão; nas demais, a página
+  pode ser consultada pelo botão “Consultar página original”.
+
+CONTAS DE ESTUDANTE
+- A aba “Entrar” permite criar uma conta sem conceder acesso administrativo.
+- Respostas, favoritas, sequência e histórico ficam em usuarios/{UID}.
+- Sem login, o progresso continua salvo somente no navegador.
+
+SE APARECER “E-MAIL OU SENHA INVÁLIDOS”
+- Para primeiro acesso, use “Criar conta”; cadastrar um documento em admins não
+  cria automaticamente a conta no Firebase Authentication.
+- Se a conta já existe, use “Esqueci minha senha”.
+- Confirme que E-mail/senha está habilitado e que o domínio do site foi autorizado.
+- Uma conta só vira administradora depois que o documento admins/{UID} existir
+  com o campo ativo=true. Contas comuns continuam funcionando como estudantes.

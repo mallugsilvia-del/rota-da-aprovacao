@@ -1,21 +1,25 @@
 /* =========================================================
    ROTA DA APROVAÇÃO — LÓGICA DO SITE
-   Todo o projeto funciona no navegador. Não há servidor,
-   framework, cadastro ou envio de dados para a internet.
+   O conteúdo roda no navegador e usa Firebase para contas,
+   sincronização de progresso e administração do banco.
    ========================================================= */
 
 /* ---------- 1. DADOS DE AGENDA E AVISOS ---------- */
-const datas = [
-  {dia:"30",mes:"AGO",titulo:"Organização de documentos",detalhe:"Separe documento, comprovantes e dados de inscrição",tipo:"Planejamento",cor:"coral"},
-  {dia:"07",mes:"SET",titulo:"Revisão semanal",detalhe:"Revise os erros e atualize seu plano de estudos",tipo:"Estudo",cor:"lilas"},
-  {dia:"15",mes:"SET",titulo:"Simulado de 20 questões",detalhe:"Treine com tempo controlado e sem consultar",tipo:"Prática",cor:"azul"},
-  {dia:"30",mes:"SET",titulo:"Fechamento do mês",detalhe:"Compare acertos e escolha os próximos temas",tipo:"Análise",cor:"verde"}
+const EVENTOS_2026 = [
+  {id:"unesp",nome:"Vestibular Unesp 2027",instituicao:"Universidade Estadual Paulista",categoria:"vestibular",inicio:"2026-09-04",fim:"2026-10-20",horaFim:"Consulte o portal",provas:["2026-11-22"],detalhe:"5.850 vagas; primeira fase em 22 de novembro de 2026.",url:"https://www.vunesp.com.br/VNSP2514",fonte:"Fundação Vunesp / Unesp"},
+  {id:"etec",nome:"Vestibulinho Etec · 1º semestre 2027",instituicao:"Centro Paula Souza",categoria:"vestibular",inicio:"2026-09-02",fim:"2026-11-03",horaFim:"20h",provas:["2026-12-06"],detalhe:"Processo seletivo para cursos técnicos e ensino médio. Prova em 6 de dezembro.",url:"https://vestibulinho.etec.sp.gov.br/calendario/",fonte:"Vestibulinho Etec"},
+  {id:"fatec",nome:"Vestibular Fatec · 1º semestre 2027",instituicao:"Faculdades de Tecnologia do Estado de SP",categoria:"vestibular",inicio:"2026-09-14",fim:"2026-11-06",horaFim:"20h",provas:["2026-12-13"],detalhe:"Inscrições em 2026 para ingresso em 2027. Prova em 13 de dezembro.",url:"https://vestibular.fatec.sp.gov.br/calendario/",fonte:"Vestibular Fatec"},
+  {id:"cgu",nome:"Concurso CGU 2026 · Auditor Federal",instituicao:"Controladoria-Geral da União",categoria:"concurso",inicio:"2026-10-09",fim:"2026-11-04",horaFim:"Confira o edital",provas:["2026-12-13"],detalhe:"60 vagas em Auditoria e Tecnologia da Informação; exige nível superior.",url:"https://www.cebraspe.org.br/concursos/cgu_26_affc",fonte:"Cebraspe / CGU"},
+  {id:"camara",nome:"Câmara dos Deputados 2026 · Analista",instituicao:"Câmara dos Deputados",categoria:"concurso",inicio:"2026-10-15",fim:"2026-11-17",horaFim:"18h · Brasília",provas:["2027-01-17"],detalhe:"Carreiras de nível superior. Provas previstas para janeiro de 2027.",url:"https://www.cebraspe.org.br/concursos/cd_26_analista",fonte:"Cebraspe / Câmara"},
+  {id:"unicamp",nome:"Vestibular Unicamp 2027",instituicao:"Universidade Estadual de Campinas",categoria:"vestibular",inicio:"2026-08-03",fim:"2026-09-08",provas:["2026-10-18","2026-11-29","2026-11-30"],detalhe:"Inscrições encerradas. 1ª fase em 18 de outubro; 2ª fase em 29 e 30 de novembro.",url:"https://www.unicamp.br/noticias/2026/08/31/unicamp-prorroga-inscricoes-para-o-vestibular-2027-ate-8-de-setembro/",fonte:"Unicamp / Comvest"},
+  {id:"fuvest",nome:"Fuvest · Vestibular USP 2027",instituicao:"Universidade de São Paulo",categoria:"vestibular",inicio:"2026-08-17",fim:"2026-10-09",provas:["2026-11-01","2026-12-06","2026-12-07"],detalhe:"Inscrições encerradas. 1ª fase em 1º de novembro; 2ª fase em 6 e 7 de dezembro.",url:"https://www.fuvest.br/fuvest-2027-fuvest-divulga-cronograma-completo-do-vestibular-2027/",fonte:"Fuvest"},
+  {id:"enem",nome:"Enem 2026",instituicao:"Inep / Ministério da Educação",categoria:"vestibular",inicio:"2026-05-25",fim:"2026-06-12",provas:["2026-11-08","2026-11-15"],detalhe:"Inscrições encerradas. Aplicação regular prevista para 8 e 15 de novembro.",url:"https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/orientacoes/cronograma",fonte:"Inep"}
 ];
-
 const avisos = [
-  {dia:"HOJE",mes:"PLANO",selo:"COMECE PEQUENO",cor:"verde",titulo:"Defina uma meta possível para hoje",texto:"Um bloco de 25 minutos bem feito é melhor do que um plano enorme que não começa.",link:"https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem",urgente:true},
-  {dia:"01",mes:"PASSO",selo:"MATERIAL OFICIAL",cor:"azul",titulo:"Use os cadernos completos para simular a prova",texto:"O site traz uma seleção guiada. Para um simulado real, resolva o PDF original sem consultar as explicações.",link:"https://www.fuvest.br/acervo-vestibular-2025/"},
-  {dia:"02",mes:"PASSO",selo:"REVISÃO ATIVA",cor:"lilas",titulo:"Explique o erro com suas palavras",texto:"Depois da resolução, registre qual ideia faltou. Isso transforma um erro isolado em conteúdo aprendido.",link:"https://www.comvest.unicamp.br/vestibulares-anteriores/1a-fase-2a-fase-comentadas/"}
+  {dia:"20",mes:"OUT",selo:"PRAZO PRÓXIMO",cor:"coral",titulo:"Unesp 2027: inscrições até 20 de outubro",texto:"Inscrições abertas em 15/10/2026. Confirme os requisitos no portal da Vunesp.",link:"https://www.vunesp.com.br/VNSP2514",urgente:true},
+  {dia:"03",mes:"NOV",selo:"INSCRIÇÕES ABERTAS",cor:"lilas",titulo:"Etec 2027: prazo até 3 de novembro, às 20h",texto:"Confira os cursos disponíveis, a inscrição e o calendário oficial.",link:"https://vestibulinho.etec.sp.gov.br/calendario/"},
+  {dia:"06",mes:"NOV",selo:"ENSINO SUPERIOR",cor:"azul",titulo:"Fatec 2027: inscrições até 6 de novembro, às 20h",texto:"Há cursos superiores de tecnologia. Verifique taxa, documentação e cursos ofertados.",link:"https://vestibular.fatec.sp.gov.br/calendario/"},
+  {dia:"17",mes:"NOV",selo:"CONCURSOS",cor:"verde",titulo:"Concurso da Câmara 2026: inscrições até 17 de novembro",texto:"Vagas para diferentes especialidades de nível superior, conforme edital da banca.",link:"https://www.cebraspe.org.br/concursos/cd_26_analista"}
 ];
 
 /* ---------- 2. GUIAS DE ESTUDO ----------
@@ -253,10 +257,9 @@ let questoes = questoesIniciais.map(q => window.RotaClassificador.classificarQue
   ativo: true
 }));
 
-/* ---------- 4. ESTADO LOCAL ----------
-   localStorage mantém respostas e favoritos após fechar a aba.
-   Se o navegador bloquear o recurso, o site continua funcionando
-   apenas durante a sessão graças ao bloco try/catch. */
+/* ---------- 4. PROGRESSO LOCAL E SINCRONIZADO ----------
+   localStorage mantém o uso sem conta e o Firestore sincroniza
+   o mesmo estado quando um estudante está autenticado. */
 const CHAVE_STORAGE = "rotaAprovacaoProgressoV2";
 const estadoPadrao = {respostas:{},favoritos:[],sequencia:0,melhorSequencia:0};
 
@@ -274,9 +277,13 @@ let materiaAtual = "Todas";
 let indiceQuestao = 0;
 let dicasAbertas = new Set();
 let ordemAleatoria = [];
+let usuarioAtual = null;
+let temporizadorSincronizacao = null;
+let carregandoProgressoNuvem = false;
 
 function salvarEstado() {
   try { localStorage.setItem(CHAVE_STORAGE,JSON.stringify(estado)); } catch (erro) { /* Navegação privada pode bloquear o armazenamento. */ }
+  if(usuarioAtual&&!carregandoProgressoNuvem)agendarSincronizacaoEstado();
 }
 
 /* ---------- 5. NAVEGAÇÃO ENTRE PÁGINAS ---------- */
@@ -287,6 +294,7 @@ function abrirPagina(id) {
   document.getElementById("menu-mobile").setAttribute("aria-expanded","false");
   document.getElementById("menu-mobile").textContent="☰";
   if(id==="desempenho") renderizarDesempenho();
+  if(id==="conta") renderizarConta();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
@@ -298,20 +306,62 @@ document.getElementById("menu-mobile").addEventListener("click",function(){
 });
 
 /* ---------- 6. RENDERIZAÇÃO DE AGENDA, AVISOS E RESUMOS ---------- */
-function htmlData(item) {
-  return `<article class="data-card"><div class="bloco-data ${item.cor}"><strong>${item.dia}</strong><small>${item.mes}</small></div><div><span class="tipo">${item.tipo}</span><h3>${item.titulo}</h3><p>${item.detalhe}</p></div><span class="seta">›</span></article>`;
+const calendarioBR=new Intl.DateTimeFormat("pt-BR",{timeZone:"America/Sao_Paulo",day:"2-digit",month:"short",year:"numeric"});
+function diaLocalISO(){return new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());}
+function dataBR(data){return calendarioBR.format(new Date(`${data}T12:00:00-03:00`)).replaceAll(" de "," ");}
+function diasAte(data,hoje=diaLocalISO()){return Math.round((Date.parse(`${data}T12:00:00Z`)-Date.parse(`${hoje}T12:00:00Z`))/86400000);}
+function proximaProva(item,hoje=diaLocalISO()){return item.provas.find(data=>data>=hoje)||null;}
+function situacaoEvento(item,hoje=diaLocalISO()){
+  if(hoje>=item.inicio&&hoje<=item.fim)return "aberta";
+  return proximaProva(item,hoje)?"prova":"encerrada";
 }
-
+function badgeEvento(item){
+  const status=situacaoEvento(item);
+  return `<span class="evento-status status-${status}">${status==="aberta"?"● Inscrições abertas":status==="prova"?"◷ Prova agendada":"✓ Edição realizada"}</span>`;
+}
+function htmlData(item,compacto=false){
+  const status=situacaoEvento(item),dataDestaque=status==="aberta"?item.fim:(proximaProva(item)||item.provas.at(-1));
+  const dataPartes=dataDestaque.split("-");
+  const rotuloData=status==="aberta"?"Inscrições até":status==="prova"?"Próxima prova":"Última prova";
+  const prazo=status==="aberta"?diasAte(item.fim):null;
+  return `<article class="data-card evento-card ${compacto?"evento-compacto":""}">
+    <div class="bloco-data lilas evento-cal"><strong>${dataPartes[2]}</strong><small>${["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"][Number(dataPartes[1])-1]}</small></div>
+    <div class="evento-conteudo"><div class="evento-tags"><span class="evento-tipo ${item.categoria}">${item.categoria==="concurso"?"Concurso público":"Vestibular"}</span>${badgeEvento(item)}</div><h3>${item.nome}</h3>
+    <p>${compacto?item.instituicao:item.detalhe}</p><div class="evento-meta"><span><b>${rotuloData}:</b> ${dataBR(dataDestaque)}${status==="aberta"&&item.horaFim?` · ${item.horaFim}`:""}</span>${!compacto&&item.provas.length?`<span><b>Prova(s):</b> ${item.provas.map(dataBR).join(" · ")}</span>`:""}${prazo!==null?`<span class="evento-contagem">${prazo===0?"Último dia de inscrição":prazo===1?"1 dia restante":`${prazo} dias restantes`}</span>`:""}</div></div>
+    <a class="evento-link" href="${item.url}" target="_blank" rel="noopener noreferrer" aria-label="Abrir edital oficial de ${item.nome}">${compacto?"Ver edital ↗":"Portal oficial ↗"}</a></article>`;
+}
 function htmlAviso(item) {
-  return `<article class="aviso-largo ${item.urgente?"urgente":""}"><span class="data-larga">${item.dia}<small>${item.mes}</small></span><div><span class="selo ${item.cor}">${item.selo}</span><h3>${item.titulo}</h3><p>${item.texto}</p></div><a href="${item.link}" target="_blank" rel="noopener">Fonte útil ↗</a></article>`;
+  return `<article class="aviso-largo ${item.urgente?"urgente":""}"><span class="data-larga">${item.dia}<small>${item.mes}</small></span><div><span class="selo ${item.cor}">${item.selo}</span><h3>${item.titulo}</h3><p>${item.texto}</p></div><a href="${item.link}" target="_blank" rel="noopener noreferrer">Portal oficial ↗</a></article>`;
 }
+function renderizarAgenda(){
+ const busca=document.getElementById("busca-evento").value.trim().toLocaleLowerCase("pt-BR");
+ const categoria=document.getElementById("filtro-evento-tipo").value;
+ const situacao=document.getElementById("filtro-evento-status").value;
+ const ordem={aberta:0,prova:1,encerrada:2};
+ const resultados=EVENTOS_2026.filter(item=>(categoria==="todos"||item.categoria===categoria)&&(situacao==="todos"||situacaoEvento(item)===situacao)&&(!busca||`${item.nome} ${item.instituicao} ${item.detalhe}`.toLocaleLowerCase("pt-BR").includes(busca)))
+ .sort((a,b)=>ordem[situacaoEvento(a)]-ordem[situacaoEvento(b)]||(situacaoEvento(a)==="aberta"?a.fim.localeCompare(b.fim):(proximaProva(a)||"9999").localeCompare(proximaProva(b)||"9999")));
+ document.getElementById("lista-datas").innerHTML=resultados.length?resultados.map(item=>htmlData(item)).join(""):'<div class="agenda-vazia">Nenhuma oportunidade encontrada. Altere os filtros para ver outras datas.</div>';
+ document.getElementById("resultado-agenda").textContent=`${resultados.length} oportunidade${resultados.length===1?"":"s"} encontrada${resultados.length===1?"":"s"}`;
+ const abertas=EVENTOS_2026.filter(item=>situacaoEvento(item)==="aberta").length;
+ document.getElementById("agenda-total").textContent=EVENTOS_2026.length;
+ document.getElementById("agenda-abertas").textContent=abertas;
+}
+function renderizarOportunidadesHome(){
+ const ordem={aberta:0,prova:1,encerrada:2};
+ const selecao=[...EVENTOS_2026].sort((a,b)=>ordem[situacaoEvento(a)]-ordem[situacaoEvento(b)]||(situacaoEvento(a)==="aberta"?a.fim.localeCompare(b.fim):(proximaProva(a)||"9999").localeCompare(proximaProva(b)||"9999")));
+ document.getElementById("datas-inicio").innerHTML=selecao.slice(0,3).map(item=>htmlData(item,true)).join("");
+ document.getElementById("oportunidades-home-cards").innerHTML=selecao.slice(0,3).map(item=>htmlData(item,true)).join("");
+ document.getElementById("oportunidades-abertas").textContent=EVENTOS_2026.filter(item=>situacaoEvento(item)==="aberta").length;
+ document.getElementById("oportunidades-provas").textContent=EVENTOS_2026.filter(item=>Boolean(proximaProva(item))).length;
+}
+document.querySelectorAll("#busca-evento,#filtro-evento-tipo,#filtro-evento-status").forEach(campo=>campo.addEventListener(campo.tagName==="SELECT"?"change":"input",renderizarAgenda));
 
 function htmlGuiaMini(guia) {
   return `<article class="guia-mini"><span class="guia-icone ${guia.cor}">${guia.icone}</span><div><span class="tipo">${guia.materia}</span><h3>${guia.titulo}</h3><p>${guia.tempo} · ${guia.nivel}</p></div><button class="botao-texto" data-abrir-guia="${guia.id}">Abrir →</button></article>`;
 }
 
-document.getElementById("datas-inicio").innerHTML=datas.slice(0,3).map(htmlData).join("");
-document.getElementById("lista-datas").innerHTML=datas.map(htmlData).join("");
+renderizarOportunidadesHome();
+renderizarAgenda();
 document.getElementById("lista-avisos").innerHTML=avisos.map(htmlAviso).join("");
 document.getElementById("guias-inicio").innerHTML=guias.slice(0,3).map(htmlGuiaMini).join("");
 document.getElementById("total-questoes-hero").textContent=questoes.length;
@@ -352,6 +402,8 @@ document.getElementById("busca-guia").addEventListener("input",renderizarGuias);
 document.getElementById("filtro-guia-materia").addEventListener("change",renderizarGuias);
 document.getElementById("fechar-guia").addEventListener("click",()=>document.getElementById("modal-guia").close());
 document.getElementById("modal-guia").addEventListener("click",evento=>{ if(evento.target===evento.currentTarget)evento.currentTarget.close(); });
+document.getElementById("fechar-imagem").addEventListener("click",()=>document.getElementById("modal-imagem").close());
+document.getElementById("modal-imagem").addEventListener("click",evento=>{ if(evento.target===evento.currentTarget)evento.currentTarget.close(); });
 
 /* ---------- 8. FILTROS DA ÁREA DE QUESTÕES ---------- */
 let materias=[];
@@ -364,13 +416,24 @@ function atualizarCatalogos() {
   const areas=[...new Set(questoes.map(q=>q.area).filter(Boolean))];
   document.getElementById("filtro-vestibular").innerHTML='<option value="Todos">Todos os vestibulares</option>'+vestibulares.map(v=>`<option>${v}</option>`).join("");
   document.getElementById("filtro-area").innerHTML='<option value="Todas">Todas as áreas</option>'+areas.map(v=>`<option>${v}</option>`).join("");
+  atualizarFiltroConteudos();
   document.getElementById("total-questoes-hero").textContent=questoes.length;
+}
+
+/* Mantém a lista de conteúdos coerente com a matéria selecionada. */
+function atualizarFiltroConteudos() {
+  const campo=document.getElementById("filtro-conteudo");
+  const valorAnterior=campo.value;
+  const base=materiaAtual==="Todas"?questoes:questoes.filter(q=>q.materia===materiaAtual);
+  const conteudos=[...new Set(base.map(q=>q.conteudo||q.tema).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  campo.innerHTML='<option value="Todos">Todos os conteúdos</option>'+conteudos.map(v=>`<option>${escaparHTML(v)}</option>`).join("");
+  campo.value=conteudos.includes(valorAnterior)?valorAnterior:"Todos";
 }
 
 function renderizarFiltros() {
   document.getElementById("filtros-materias").innerHTML=materias.map(m=>`<button class="${m===materiaAtual?"active":""}" data-materia="${m}">${m}</button>`).join("");
   document.querySelectorAll("[data-materia]").forEach(botao=>botao.addEventListener("click",()=>{
-    materiaAtual=botao.dataset.materia; indiceQuestao=0; renderizarFiltros(); renderizarQuestao();
+    materiaAtual=botao.dataset.materia; indiceQuestao=0; atualizarFiltroConteudos(); renderizarFiltros(); renderizarQuestao();
   }));
 }
 
@@ -378,20 +441,41 @@ function questoesFiltradas() {
   const busca=document.getElementById("busca-questao").value.trim().toLowerCase();
   const vestibular=document.getElementById("filtro-vestibular").value;
   const area=document.getElementById("filtro-area").value;
+  const conteudo=document.getElementById("filtro-conteudo").value;
   const nivel=document.getElementById("filtro-nivel").value;
   const complexidade=document.getElementById("filtro-complexidade").value;
+  const visual=document.getElementById("filtro-visual").value;
   const modo=document.getElementById("filtro-modo").value;
   let lista=questoes.filter(q=>{
     const resposta=estado.respostas[q.id];
     const atendeModo=modo==="todas"||(modo==="erros"&&resposta&&!resposta.correta)||(modo==="favoritas"&&estado.favoritos.includes(q.id))||(modo==="naoRespondidas"&&!resposta);
+    const temVisual=Boolean(q.requerImagem||q.imagemPagina||q.imagem);
+    const atendeVisual=visual==="todas"||(visual==="visuais"&&temVisual)||(visual==="texto"&&!temVisual);
     const texto=`${q.vestibular} ${q.ano} ${q.area||""} ${q.materia} ${q.tema} ${q.pergunta}`.toLowerCase();
-    return (materiaAtual==="Todas"||q.materia===materiaAtual)&&(vestibular==="Todos"||q.vestibular===vestibular)&&(area==="Todas"||q.area===area)&&(nivel==="Todos"||q.nivel===nivel)&&(complexidade==="Todos"||Number(q.complexidade)===Number(complexidade))&&atendeModo&&(!busca||texto.includes(busca));
+    return (materiaAtual==="Todas"||q.materia===materiaAtual)&&(vestibular==="Todos"||q.vestibular===vestibular)&&(area==="Todas"||q.area===area)&&(conteudo==="Todos"||(q.conteudo||q.tema)===conteudo)&&(nivel==="Todos"||q.nivel===nivel)&&(complexidade==="Todos"||Number(q.complexidade)===Number(complexidade))&&atendeVisual&&atendeModo&&(!busca||texto.includes(busca));
   });
   if(ordemAleatoria.length)lista.sort((a,b)=>ordemAleatoria.indexOf(a.id)-ordemAleatoria.indexOf(b.id));
   return lista;
 }
 
 /* ---------- 9. CARTÃO INTERATIVO DA QUESTÃO ---------- */
+function htmlImagemQuestao(q) {
+  const caminho=q.imagemPagina||q.imagem;
+  if(!caminho)return "";
+  const src=escaparHTML(caminho);
+  if(q.requerImagem||q.alternativasEmImagem){
+    return `<figure class="questao-imagem"><div class="questao-imagem-topo"><span><b>Imagem necessária</b><small>Consulte a página original para resolver</small></span><button class="botao-texto" type="button" data-ampliar-imagem="${src}">Ampliar ↗</button></div><img src="${src}" alt="Página original da questão ${escaparHTML(q.numero)}" loading="lazy"><figcaption>Se o recorte incluir mais de uma questão, use o número indicado no topo do cartão.</figcaption><p class="imagem-erro" hidden>Não foi possível carregar esta imagem. Verifique se a pasta <code>imagens</code> foi publicada junto com o site.</p></figure>`;
+  }
+  return `<button class="consultar-original" type="button" data-ampliar-imagem="${src}"><span>▧</span><span><strong>Consultar página original</strong><small>Abra a figura ou o texto completo da prova</small></span><b>↗</b></button>`;
+}
+
+function abrirImagemQuestao(caminho,titulo) {
+  const modal=document.getElementById("modal-imagem");
+  document.getElementById("imagem-ampliada").src=caminho;
+  document.getElementById("titulo-imagem").textContent=titulo||"Figura da questão";
+  modal.showModal();
+}
+
 function renderizarQuestao() {
   const lista=questoesFiltradas();
   const card=document.getElementById("card-questao");
@@ -416,17 +500,19 @@ function renderizarQuestao() {
     if(revelada&&i===q.resposta)classe+=" correta";
     if(revelada&&i===selecionada&&i!==q.resposta)classe+=" errada";
     const simbolo=revelada&&i===q.resposta?'<span class="resultado">✓</span>':revelada&&i===selecionada?'<span class="resultado">×</span>':"";
-    return `<button class="${classe}" data-alternativa="${i}" ${revelada?"disabled":""}><b>${String.fromCharCode(65+i)}</b><span>${texto}</span>${simbolo}</button>`;
+    return `<button class="${classe}" data-alternativa="${i}" ${revelada?"disabled":""}><b>${String.fromCharCode(65+i)}</b><span>${escaparHTML(texto)}</span>${simbolo}</button>`;
   }).join("");
 
   card.innerHTML=`
-    <div class="questao-topo"><span class="tag">${q.vestibular} ${q.ano} · Q${String(q.numero).padStart(2,"0")}</span><span class="tag">${q.area||"Área geral"}</span><span class="tag">${q.materia}</span><span class="tag nivel">${q.nivel}</span><span class="tag">Complexidade ${q.complexidade||3}/5</span><button class="favoritar ${favorita?"ativo":""}" id="favoritar" title="Favoritar questão" aria-label="Favoritar questão">${favorita?"★":"☆"}</button></div>
-    <h2>${q.pergunta}</h2>
+    <div class="questao-topo"><span class="tag">${escaparHTML(q.vestibular)} ${q.ano} · Q${String(q.numero).padStart(2,"0")}</span><span class="tag area-tag">${escaparHTML(q.area||"Área geral")}</span><span class="tag materia-tag">${escaparHTML(q.materia)}</span><span class="tag">${escaparHTML(q.conteudo||q.tema)}</span><span class="tag nivel">${escaparHTML(q.nivel)}</span><span class="tag">Complexidade ${q.complexidade||3}/5</span><button class="favoritar ${favorita?"ativo":""}" id="favoritar" title="Favoritar questão" aria-label="Favoritar questão">${favorita?"★":"☆"}</button></div>
+    <h2>${escaparHTML(q.pergunta)}</h2>
+    ${htmlImagemQuestao(q)}
+    ${q.alternativasEmImagem?'<div class="alerta-alternativas"><b>As alternativas estão na imagem.</b> Use as letras abaixo para marcar sua resposta.</div>':""}
     <div class="opcoes">${opcoes}</div>
-    ${dicaAberta?`<div class="caixa-dica"><h3>💡 Dica facilitadora</h3><p>${q.dica}</p></div>`:""}
-    ${revelada?`<div class="resolucao"><h3>${registro.correta?"✓ Muito bem!":"↗ Vamos aprender com essa questão"}</h3><ol>${q.resolucao.map(p=>`<li>${p}</li>`).join("")}</ol><div class="resposta-final">${q.explicacao}</div><div class="recomendacao-questao"><strong>Próximo estudo recomendado</strong><p>${q.recomendacao||`Revise ${q.tema} e tente uma questão semelhante.`}</p></div></div>`:""}
+    ${dicaAberta?`<div class="caixa-dica"><h3>💡 Dica facilitadora</h3><p>${escaparHTML(q.dica)}</p></div>`:""}
+    ${revelada?`<div class="resolucao"><h3>${registro.correta?"✓ Muito bem!":"↗ Vamos aprender com essa questão"}</h3><ol>${q.resolucao.map(p=>`<li>${escaparHTML(p)}</li>`).join("")}</ol><div class="resposta-final">${escaparHTML(q.explicacao)}</div><div class="recomendacao-questao"><strong>Próximo estudo recomendado</strong><p>${escaparHTML(q.recomendacao||`Revise ${q.tema} e tente uma questão semelhante.`)}</p></div></div>`:""}
     <div class="acoes-questao"><button class="botao-secundario" id="mostrar-dica">${dicaAberta?"Ocultar dica":"💡 Ver dica"}</button>${!revelada?'<button class="botao-primario" id="conferir" disabled>Conferir resposta</button>':""}<div class="navegacao"><button class="botao-secundario" id="anterior">← Anterior</button><button class="botao-secundario" id="proxima">Próxima →</button></div></div>
-    <small class="fonte-questao">Fonte: ${q.fonte}. O texto pode ter sido condensado para estudo; consulte o PDF enviado para a versão integral.</small>`;
+    <small class="fonte-questao">Fonte: ${escaparHTML(q.fonte)}. O texto pode ter sido condensado para estudo; consulte a página original quando disponível.</small>`;
 
   document.getElementById("contador-questoes").textContent=`${indiceQuestao+1} de ${lista.length}`;
   document.getElementById("barra-questoes").style.width=`${((indiceQuestao+1)/lista.length)*100}%`;
@@ -445,7 +531,7 @@ function renderizarQuestao() {
     if(!escolha)return;
     const indice=Number(escolha.dataset.alternativa);
     const correta=indice===q.resposta;
-    estado.respostas[q.id]={selecionada:indice,correta};
+    estado.respostas[q.id]={selecionada:indice,correta,respondidaEm:new Date().toISOString()};
     if(correta){estado.sequencia+=1;estado.melhorSequencia=Math.max(estado.melhorSequencia,estado.sequencia);}
     else estado.sequencia=0;
     salvarEstado(); renderizarQuestao(); atualizarResumo();
@@ -461,9 +547,11 @@ function renderizarQuestao() {
   });
   document.getElementById("anterior").addEventListener("click",()=>{indiceQuestao-=1;renderizarQuestao();});
   document.getElementById("proxima").addEventListener("click",()=>{indiceQuestao+=1;renderizarQuestao();});
+  card.querySelectorAll("[data-ampliar-imagem]").forEach(botao=>botao.addEventListener("click",()=>abrirImagemQuestao(botao.dataset.ampliarImagem,`${q.vestibular} ${q.ano} · questão ${q.numero}`)));
+  card.querySelectorAll(".questao-imagem img").forEach(imagem=>imagem.addEventListener("error",()=>{imagem.hidden=true;const aviso=imagem.parentElement.querySelector(".imagem-erro");if(aviso)aviso.hidden=false;}));
 }
 
-["busca-questao","filtro-vestibular","filtro-area","filtro-nivel","filtro-complexidade","filtro-modo"].forEach(id=>{
+["busca-questao","filtro-vestibular","filtro-area","filtro-conteudo","filtro-nivel","filtro-complexidade","filtro-visual","filtro-modo"].forEach(id=>{
   const evento=id==="busca-questao"?"input":"change";
   document.getElementById(id).addEventListener(evento,()=>{indiceQuestao=0;ordemAleatoria=[];renderizarQuestao();});
 });
@@ -531,6 +619,297 @@ const bancoFirebase = window.ROTA_FIREBASE_ATIVO ? firebase.firestore() : null;
 const autenticacaoFirebase = window.ROTA_FIREBASE_ATIVO ? firebase.auth() : null;
 let questoesAdmin = [];
 
+/* ---------- 11.1. CONTA E HISTÓRICO DO ESTUDANTE ---------- */
+function textoErroAutenticacao(erro) {
+  const codigo=erro?.code||"";
+  const mensagens={
+    "auth/invalid-credential":"E-mail ou senha não reconhecidos. Se este for seu primeiro acesso, crie uma conta; se esqueceu a senha, use a recuperação.",
+    "auth/user-not-found":"Não encontramos uma conta com este e-mail. Confira o endereço ou crie sua conta.",
+    "auth/wrong-password":"A senha não confere. Tente novamente ou use “Esqueci minha senha”.",
+    "auth/email-already-in-use":"Este e-mail já possui uma conta. Use a aba Entrar ou recupere sua senha.",
+    "auth/weak-password":"Escolha uma senha com pelo menos 6 caracteres.",
+    "auth/invalid-email":"Digite um endereço de e-mail válido.",
+    "auth/operation-not-allowed":"Este tipo de login ainda não foi habilitado no Firebase Authentication.",
+    "auth/unauthorized-domain":"Este endereço do site precisa ser adicionado aos domínios autorizados do Firebase Authentication.",
+    "auth/popup-blocked":"O navegador bloqueou a janela do Google. Libere pop-ups e tente novamente.",
+    "auth/popup-closed-by-user":"A janela de login foi fechada antes da conclusão.",
+    "auth/too-many-requests":"Muitas tentativas em pouco tempo. Aguarde alguns minutos ou redefina sua senha.",
+    "auth/network-request-failed":"Falha de conexão. Confira a internet e tente novamente."
+  };
+  return mensagens[codigo]||erro?.message||"Não foi possível concluir o acesso. Tente novamente.";
+}
+
+function mensagemConta(texto,tipo="") {
+  const area=document.getElementById("conta-mensagem");
+  area.textContent=texto;
+  area.className=`mensagem-conta ${tipo}`.trim();
+}
+
+function agendarSincronizacaoEstado() {
+  if(!usuarioAtual||!bancoFirebase)return;
+  clearTimeout(temporizadorSincronizacao);
+  const status=document.getElementById("status-sincronizacao");
+  if(status)status.textContent="Salvando progresso…";
+  temporizadorSincronizacao=setTimeout(sincronizarEstadoAgora,650);
+}
+
+async function sincronizarEstadoAgora() {
+  if(!usuarioAtual||!bancoFirebase)return;
+  try {
+    await bancoFirebase.collection("usuarios").doc(usuarioAtual.uid).set({
+      nome:usuarioAtual.displayName||usuarioAtual.email?.split("@")[0]||"Estudante",
+      email:usuarioAtual.email||"",
+      avatar:avatarSelecionado,
+      progresso:{
+        respostas:estado.respostas,
+        favoritos:estado.favoritos,
+        sequencia:estado.sequencia,
+        melhorSequencia:estado.melhorSequencia
+      },
+      atualizadoEm:firebase.firestore.FieldValue.serverTimestamp()
+    },{merge:true});
+    const status=document.getElementById("status-sincronizacao");
+    if(status)status.textContent="✓ Progresso sincronizado";
+  } catch(erro) {
+    console.warn("Falha ao sincronizar progresso",erro);
+    const status=document.getElementById("status-sincronizacao");
+    if(status)status.textContent="Progresso salvo neste aparelho; sincronização pendente";
+  }
+}
+
+function mesclarRespostas(local,remotas) {
+  const resultado={...(remotas||{})};
+  Object.entries(local||{}).forEach(([id,respostaLocal])=>{
+    const respostaRemota=resultado[id];
+    const dataLocal=Date.parse(respostaLocal?.respondidaEm||0)||0;
+    const dataRemota=Date.parse(respostaRemota?.respondidaEm||0)||0;
+    if(!respostaRemota||dataLocal>=dataRemota)resultado[id]=respostaLocal;
+  });
+  return resultado;
+}
+
+async function carregarEstadoNuvem(usuario) {
+  if(!bancoFirebase)return;
+  carregandoProgressoNuvem=true;
+  try {
+    const documento=await bancoFirebase.collection("usuarios").doc(usuario.uid).get();
+    if(documento.exists){
+      const dadosPerfil=documento.data();
+      if(avatarValido(dadosPerfil.avatar)){
+        avatarSelecionado=dadosPerfil.avatar;
+        salvarAvatarLocal(usuario.uid,avatarSelecionado);
+        desenharAvatares();
+      }
+      const remoto=dadosPerfil.progresso||{};
+      estado={
+        respostas:mesclarRespostas(estado.respostas,remoto.respostas),
+        favoritos:[...new Set([...(remoto.favoritos||[]),...estado.favoritos])],
+        sequencia:Math.max(Number(estado.sequencia)||0,Number(remoto.sequencia)||0),
+        melhorSequencia:Math.max(Number(estado.melhorSequencia)||0,Number(remoto.melhorSequencia)||0)
+      };
+      try { localStorage.setItem(CHAVE_STORAGE,JSON.stringify(estado)); } catch(erro) { /* O site continua em memória. */ }
+    }
+  } catch(erro) {
+    console.warn("Não foi possível carregar o histórico da conta",erro);
+  } finally {
+    carregandoProgressoNuvem=false;
+  }
+  atualizarResumo();
+  renderizarQuestao();
+  renderizarDesempenho();
+  renderizarConta();
+  await sincronizarEstadoAgora();
+}
+
+function questaoPorId(id) {
+  return questoes.find(q=>String(q.id)===String(id));
+}
+
+function abrirQuestaoPorId(id) {
+  const q=questaoPorId(id);
+  if(!q)return;
+  materiaAtual=q.materia;
+  document.getElementById("busca-questao").value="";
+  ["filtro-vestibular","filtro-area","filtro-conteudo","filtro-nivel","filtro-complexidade"].forEach(campo=>document.getElementById(campo).value=campo==="filtro-area"?"Todas":"Todos");
+  document.getElementById("filtro-visual").value="todas";
+  document.getElementById("filtro-modo").value="todas";
+  atualizarFiltroConteudos();
+  renderizarFiltros();
+  indiceQuestao=Math.max(0,questoesFiltradas().findIndex(item=>String(item.id)===String(id)));
+  renderizarQuestao();
+  abrirPagina("questoes");
+}
+
+function abrirModoRevisao(modo) {
+  materiaAtual="Todas";
+  document.getElementById("filtro-modo").value=modo;
+  document.getElementById("busca-questao").value="";
+  atualizarFiltroConteudos(); renderizarFiltros();
+  indiceQuestao=0; renderizarQuestao(); abrirPagina("questoes");
+}
+
+/* ---------- AVATARES EM SILHUETA DE BUSTO ----------
+   SVG vetorial local: sem uploads, sem fotos pessoais.
+   Escolha salva por usuário no Firestore, além do armazenamento local.
+*/
+const AVATARES=[
+  {id:"aurora",nome:"Aurora",fundo:"#c4b5fd",roupa:"#6632bb",silhueta:"#332056",cabelo:0},
+  {id:"safira",nome:"Safira",fundo:"#a5b4fc",roupa:"#3d398f",silhueta:"#21184b",cabelo:1},
+  {id:"luna",nome:"Luna",fundo:"#fbcfe8",roupa:"#af4383",silhueta:"#512148",cabelo:2},
+  {id:"sol",nome:"Sol",fundo:"#f9d8ac",roupa:"#945e3b",silhueta:"#49304f",cabelo:3},
+  {id:"iris",nome:"Íris",fundo:"#c7d2fe",roupa:"#5c54bc",silhueta:"#32235f",cabelo:4},
+  {id:"astro",nome:"Astro",fundo:"#bde9e2",roupa:"#287e82",silhueta:"#1e4459",cabelo:5},
+  {id:"violeta",nome:"Violeta",fundo:"#ddd6fe",roupa:"#9157cc",silhueta:"#3a2359",cabelo:6},
+  {id:"horizonte",nome:"Horizonte",fundo:"#fecdd3",roupa:"#ab516d",silhueta:"#4a2546",cabelo:7}
+];
+const CHAVE_AVATAR="rotaAprovacaoAvatarV6";
+const DEFAULT_AVATAR="aurora";
+function avatarValido(id){return AVATARES.some(a=>a.id===id);}
+function lerAvatarLocal(chave="visitante"){
+  try{const id=localStorage.getItem(`${CHAVE_AVATAR}-${chave}`);return avatarValido(id)?id:null;}catch(erro){return null;}
+}
+function salvarAvatarLocal(chave,id){try{localStorage.setItem(`${CHAVE_AVATAR}-${chave}`,id);}catch(erro){/* armazenamento opcional */}}
+let avatarSelecionado=lerAvatarLocal()||DEFAULT_AVATAR;
+let avatarEmEdicao=avatarSelecionado;
+function avatarSVG(id){
+  const av=AVATARES.find(a=>a.id===id)||AVATARES[0];
+  const hairstyles=[
+    '<path d="M49 77C39 33 71 22 92 30c37-10 52 19 38 54-5-14-12-28-21-32-18 9-35 12-60 25Z"/>',
+    '<path d="M46 76c-3-41 24-57 48-54 31 0 48 24 39 56-15-12-21-26-31-24-19 8-39 12-56 22Z"/>',
+    '<path d="M50 71C39 45 59 24 91 25c35 1 47 23 38 51-3-8-9-15-16-20-22 9-38 9-63 15Z"/><path d="M51 70c-10 30-11 45-1 54l13-7c-7-13-5-27-5-38ZM127 65c10 28 12 44 1 58l-13-8c8-14 5-28 5-36Z"/>',
+    '<path d="M47 75c-6-30 13-50 42-49 24-1 45 14 44 48-7-7-12-8-17-10-10 3-21-10-26-16-11 17-28 18-43 27Z"/>',
+    '<path d="M48 75c-2-38 15-52 44-52 35 0 49 27 39 55-17-13-30-21-43-21-12 3-28 11-40 18Z"/><path d="M50 54c-10-18-7-31 5-38l15 12ZM118 23c12-13 28-6 26 15l-12 17Z"/>',
+    '<path d="M47 72c-2-20 4-47 43-47 37 0 46 24 42 47-14-9-27-20-44-18-14 6-22 13-41 18Z"/><path d="M45 54c-10-2-14-13-8-22l13 5ZM134 58c12-4 16-16 7-24l-11 7Z"/>',
+    '<path d="M53 65c-13-16-8-31 7-35 1-17 24-19 33-11 17-9 33 4 32 16 14 5 13 20 8 32-13-9-22-19-36-20-21 1-29 11-44 18Z"/>',
+    '<path d="M46 73c-1-34 18-51 44-52 24-1 48 16 44 52-16-5-25-20-44-19-18 0-29 13-44 19Z"/><path d="M50 73c-6 25-3 40 4 50l12-7c-8-17-6-30-4-44ZM128 72c4 19 5 32-3 51l-12-7c10-18 8-30 7-44Z"/>'
+  ];
+  return `<svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Silhueta ${av.nome}" focusable="false"><defs><clipPath id="clip-avatar-${av.id}"><circle cx="90" cy="90" r="89"/></clipPath></defs><g clip-path="url(#clip-avatar-${av.id})"><rect width="180" height="180" fill="${av.fundo}"/><circle cx="141" cy="38" r="47" fill="#fff" opacity=".24"/><circle cx="29" cy="146" r="55" fill="#fff" opacity=".12"/><path d="M17 182c1-30 19-53 48-60 12-3 13-8 13-16h24c0 8 2 13 15 16 31 8 45 33 48 60Z" fill="${av.roupa}"/><path d="M71 124c7 7 29 10 38 0l-17 19Z" fill="#fff" opacity=".15"/><rect x="77" y="96" width="26" height="29" rx="12" fill="${av.silhueta}"/><ellipse cx="90" cy="73" rx="37" ry="46" fill="${av.silhueta}"/><g fill="${av.silhueta}">${hairstyles[av.cabelo]}</g><path d="M66 151c19 11 32 11 49 0" fill="none" stroke="#fff" stroke-width="3" opacity=".12" stroke-linecap="round"/></g></svg>`;
+}
+function desenharAvatares(){
+  ["avatar-hero-preview","aluno-avatar","avatar-cadastro-preview","avatar-nav"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=avatarSVG(avatarSelecionado);});
+  const selecionado=AVATARES.find(av=>av.id===avatarSelecionado);
+  const noPerfil=document.getElementById("aluno-avatar");if(noPerfil)noPerfil.setAttribute("aria-label",`Avatar ${selecionado.nome}`);
+}
+function desenharGradeAvatar(){
+  const area=document.getElementById("grade-avatares");
+  area.innerHTML=AVATARES.map(av=>`<button type="button" class="avatar-opcao ${av.id===avatarEmEdicao?"selecionado":""}" role="radio" aria-checked="${av.id===avatarEmEdicao}" data-avatar="${av.id}" aria-label="Selecionar busto ${av.nome}"><span class="avatar-miniatura">${avatarSVG(av.id)}</span><strong>${av.nome}</strong><span class="avatar-check" aria-hidden="true">✓</span></button>`).join("");
+  area.querySelectorAll("[data-avatar]").forEach(botao=>botao.addEventListener("click",()=>{avatarEmEdicao=botao.dataset.avatar;desenharGradeAvatar();}));
+}
+function abrirSeletorAvatar(){
+  avatarEmEdicao=avatarSelecionado;
+  desenharGradeAvatar();
+  document.getElementById("avatar-feedback").textContent=usuarioAtual?"Sua escolha será sincronizada com sua conta.":"Você pode escolher agora e conectar uma conta depois.";
+  const modal=document.getElementById("modal-avatar");
+  if(typeof modal.showModal==="function")modal.showModal();else modal.setAttribute("open","");
+}
+["escolher-avatar-hero","escolher-avatar-conta","escolher-avatar-cadastro"].forEach(id=>document.getElementById(id).addEventListener("click",abrirSeletorAvatar));
+function fecharSeletorAvatar(){const m=document.getElementById("modal-avatar");if(m.open&&typeof m.close==="function")m.close();else m.removeAttribute("open");}
+document.getElementById("fechar-avatar").addEventListener("click",fecharSeletorAvatar);
+document.getElementById("modal-avatar").addEventListener("click",evento=>{if(evento.target===evento.currentTarget)fecharSeletorAvatar();});
+document.getElementById("salvar-avatar").addEventListener("click",()=>{
+ avatarSelecionado=avatarEmEdicao;
+ salvarAvatarLocal(usuarioAtual?.uid||"visitante",avatarSelecionado);
+ if(!usuarioAtual)salvarAvatarLocal("visitante",avatarSelecionado);
+ desenharAvatares();
+ if(usuarioAtual)agendarSincronizacaoEstado();
+ fecharSeletorAvatar();
+});
+desenharAvatares();
+
+function renderizarConta() {
+  const desconectada=document.getElementById("conta-desconectada");
+  const conectada=document.getElementById("conta-conectada");
+  const navTexto=document.getElementById("nav-conta-texto");
+  const aviso=document.getElementById("aviso-sincronizacao");
+  if(!usuarioAtual){
+    desconectada.hidden=false; conectada.hidden=true; navTexto.textContent="Entrar";
+    aviso.classList.remove("sincronizado");
+    aviso.innerHTML='<span>☁</span><p><strong>Seu progresso está neste aparelho.</strong> <button class="link-inline" data-page="conta">Entre ou crie uma conta</button> para continuar de qualquer dispositivo.</p>';
+    aviso.querySelector("[data-page]").addEventListener("click",()=>abrirPagina("conta"));
+    return;
+  }
+  desconectada.hidden=true; conectada.hidden=false;
+  const nome=usuarioAtual.displayName||usuarioAtual.email?.split("@")[0]||"Estudante";
+  navTexto.textContent=nome.split(" ")[0];
+  document.getElementById("aluno-nome").textContent=nome;
+  document.getElementById("aluno-email").textContent=usuarioAtual.email||"Conta conectada";
+  desenharAvatares();
+  aviso.classList.add("sincronizado");
+  aviso.innerHTML='<span>✓</span><p><strong>Progresso sincronizado.</strong> Suas respostas e favoritas acompanham sua conta.</p>';
+  const s=obterEstatisticas();
+  document.getElementById("cards-conta").innerHTML=[
+    ["Respondidas",s.respondidas,`${s.acertos} acertos`],
+    ["Aproveitamento",`${s.percentual}%`,`${s.erros} para revisar`],
+    ["Melhor sequência",estado.melhorSequencia,"acertos seguidos"],
+    ["Favoritas",estado.favoritos.length,"salvas na conta"]
+  ].map(([titulo,valor,detalhe])=>`<article class="metrica"><small>${titulo}</small><strong>${valor}</strong><small>${detalhe}</small></article>`).join("");
+  const historico=Object.entries(estado.respostas).map(([id,resposta])=>({q:questaoPorId(id),resposta,id})).filter(item=>item.q)
+    .sort((a,b)=>(Date.parse(b.resposta.respondidaEm||0)||0)-(Date.parse(a.resposta.respondidaEm||0)||0)).slice(0,12);
+  document.getElementById("historico-conta").innerHTML=historico.length?historico.map(({q,resposta,id})=>{
+    const data=resposta.respondidaEm?new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}).format(new Date(resposta.respondidaEm)):"Anteriormente";
+    return `<button class="historico-item" type="button" data-historico-id="${escaparHTML(id)}"><span class="historico-status ${resposta.correta?"acerto":"erro"}">${resposta.correta?"✓":"×"}</span><span><strong>${escaparHTML(q.materia)} · ${escaparHTML(q.tema)}</strong><small>${escaparHTML(q.vestibular)} ${q.ano} · questão ${q.numero} · ${data}</small></span><b>›</b></button>`;
+  }).join(""):'<div class="vazio compacto"><div>◎</div><h3>Seu histórico começa aqui</h3><p>Resolva uma questão e volte para acompanhar sua evolução.</p></div>';
+  document.querySelectorAll("[data-historico-id]").forEach(botao=>botao.addEventListener("click",()=>abrirQuestaoPorId(botao.dataset.historicoId)));
+}
+
+document.querySelectorAll("[data-auth-tab]").forEach(botao=>botao.addEventListener("click",()=>{
+  document.querySelectorAll("[data-auth-tab]").forEach(item=>item.classList.toggle("active",item===botao));
+  const cadastro=botao.dataset.authTab==="cadastro";
+  document.getElementById("form-login-aluno").hidden=cadastro;
+  document.getElementById("form-cadastro-aluno").hidden=!cadastro;
+  mensagemConta("");
+}));
+
+document.getElementById("form-login-aluno").addEventListener("submit",async evento=>{
+  evento.preventDefault(); mensagemConta("Entrando…","info");
+  try {
+    if(!autenticacaoFirebase)throw {code:"auth/operation-not-allowed"};
+    await autenticacaoFirebase.signInWithEmailAndPassword(document.getElementById("aluno-login-email").value.trim(),document.getElementById("aluno-login-senha").value);
+    mensagemConta("Conta conectada. Seu histórico está sendo sincronizado.","sucesso");
+  } catch(erro) { mensagemConta(textoErroAutenticacao(erro),"erro"); }
+});
+
+document.getElementById("form-cadastro-aluno").addEventListener("submit",async evento=>{
+  evento.preventDefault();
+  const nome=document.getElementById("aluno-cadastro-nome").value.trim();
+  const email=document.getElementById("aluno-cadastro-email").value.trim();
+  const senha=document.getElementById("aluno-cadastro-senha").value;
+  const confirmacao=document.getElementById("aluno-cadastro-confirmar").value;
+  if(senha!==confirmacao)return mensagemConta("As duas senhas precisam ser iguais.","erro");
+  mensagemConta("Criando sua conta…","info");
+  try {
+    if(!autenticacaoFirebase)throw {code:"auth/operation-not-allowed"};
+    const avatarCadastro=avatarSelecionado;
+    const credencial=await autenticacaoFirebase.createUserWithEmailAndPassword(email,senha);
+    await credencial.user.updateProfile({displayName:nome});
+    usuarioAtual=credencial.user;
+    avatarSelecionado=avatarCadastro;
+    salvarAvatarLocal(credencial.user.uid,avatarCadastro);
+    desenharAvatares();
+    await sincronizarEstadoAgora(); renderizarConta();
+  } catch(erro) { mensagemConta(textoErroAutenticacao(erro),"erro"); }
+});
+
+document.getElementById("recuperar-senha").addEventListener("click",async()=>{
+  const email=document.getElementById("aluno-login-email").value.trim();
+  if(!email)return mensagemConta("Digite seu e-mail acima para receber o link de recuperação.","erro");
+  try {
+    await autenticacaoFirebase.sendPasswordResetEmail(email);
+    mensagemConta("Enviamos um link de recuperação. Confira também a caixa de spam.","sucesso");
+  } catch(erro) { mensagemConta(textoErroAutenticacao(erro),"erro"); }
+});
+
+document.getElementById("login-aluno-google").addEventListener("click",async()=>{
+  mensagemConta("Abrindo o Google…","info");
+  try {
+    if(!autenticacaoFirebase)throw {code:"auth/operation-not-allowed"};
+    await autenticacaoFirebase.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  } catch(erro) { mensagemConta(textoErroAutenticacao(erro),"erro"); }
+});
+document.getElementById("sair-conta").addEventListener("click",()=>autenticacaoFirebase?.signOut());
+document.getElementById("abrir-erros-conta").addEventListener("click",()=>abrirModoRevisao("erros"));
+document.getElementById("abrir-favoritas-conta").addEventListener("click",()=>abrirModoRevisao("favoritas"));
+
 /* Garante valores válidos mesmo em documentos antigos ou incompletos. */
 function normalizarQuestao(dados,id) {
   return {
@@ -542,7 +921,9 @@ function normalizarQuestao(dados,id) {
     area:dados.area||window.RotaClassificador.AREAS[dados.materia]||"Conhecimentos Gerais",
     materia:dados.materia||"Geral",
     tema:dados.tema||"Conteúdo geral",
+    conteudo:dados.conteudo||dados.tema||"Conteúdo geral",
     nivel:dados.nivel||"Médio",
+    dificuldade:dados.dificuldade||dados.nivel||"Médio",
     complexidade:Number(dados.complexidade)||3,
     pergunta:dados.pergunta||"",
     opcoes:Array.isArray(dados.opcoes)?dados.opcoes:[],
@@ -552,6 +933,10 @@ function normalizarQuestao(dados,id) {
     explicacao:dados.explicacao||"",
     recomendacao:dados.recomendacao||`Revise ${dados.tema||"o conteúdo"} antes de avançar.`,
     fonte:dados.fonte||"Banco próprio",
+    imagemPagina:dados.imagemPagina||dados.imagem||"",
+    requerImagem:dados.requerImagem===true,
+    alternativasEmImagem:dados.alternativasEmImagem===true,
+    confiancaClassificacao:dados.confiancaClassificacao||"não informada",
     ativo:dados.ativo!==false
   };
 }
@@ -566,7 +951,7 @@ async function carregarQuestoesPublicadas() {
       questoes=consulta.docs.map(doc=>normalizarQuestao(doc.data(),doc.id))
         .sort((a,b)=>a.materia.localeCompare(b.materia)||b.ano-a.ano||a.numero-b.numero);
       materiaAtual="Todas"; indiceQuestao=0; ordemAleatoria=[];
-      atualizarCatalogos(); renderizarFiltros(); renderizarQuestao(); atualizarResumo(); renderizarGuias();
+      atualizarCatalogos(); renderizarFiltros(); renderizarQuestao(); atualizarResumo(); renderizarGuias(); renderizarConta();
     }
   } catch(erro) {
     console.warn("Não foi possível ler o Firestore. O conteúdo demonstrativo continuará disponível.",erro);
@@ -591,6 +976,7 @@ function limparFormularioQuestao() {
   document.getElementById("titulo-form-questao").textContent="Nova questão";
   document.getElementById("campo-ano").value=new Date().getFullYear();
   document.getElementById("campo-ativo").checked=true;
+  document.getElementById("campo-requerImagem").checked=false;
   document.getElementById("form-mensagem").textContent="";
 }
 
@@ -615,6 +1001,8 @@ function dadosDoFormulario() {
     explicacao:document.getElementById("campo-explicacao").value.trim(),
     recomendacao:document.getElementById("campo-recomendacao").value.trim(),
     fonte:document.getElementById("campo-fonte").value.trim(),
+    imagemPagina:document.getElementById("campo-imagemPagina").value.trim(),
+    requerImagem:document.getElementById("campo-requerImagem").checked,
     ativo:document.getElementById("campo-ativo").checked,
     atualizadoEm:firebase.firestore.FieldValue.serverTimestamp()
   });
@@ -649,7 +1037,7 @@ function renderizarListaAdmin() {
   document.getElementById("total-admin").textContent=questoesAdmin.length;
   document.getElementById("lista-questoes-admin").innerHTML=filtradas.length?filtradas.map(q=>`
     <article class="item-admin ${q.ativo?"":"rascunho"}">
-      <div><span class="tag">${escaparHTML(q.materia)}</span><span class="tag nivel">${escaparHTML(q.nivel)}</span><small>${escaparHTML(q.vestibular)} ${q.ano} · Q${q.numero}</small></div>
+      <div><span class="tag">${escaparHTML(q.materia)}</span><span class="tag nivel">${escaparHTML(q.nivel)}</span>${q.requerImagem?'<span class="tag visual">▧ imagem</span>':""}${q.confiancaClassificacao==="baixa"?'<span class="tag revisar">revisar</span>':""}<small>${escaparHTML(q.vestibular)} ${q.ano} · Q${q.numero}</small></div>
       <h3>${escaparHTML(q.tema)}</h3><p>${escaparHTML(q.pergunta)}</p>
       <div class="acoes-admin"><button class="botao-texto" data-editar="${q.id}">Editar</button><button class="botao-texto perigo" data-excluir="${q.id}">Excluir</button></div>
     </article>`).join(""):'<p class="carregando">Nenhuma questão encontrada.</p>';
@@ -658,13 +1046,14 @@ function renderizarListaAdmin() {
 function preencherFormulario(q) {
   document.getElementById("questao-id").value=q.id;
   document.getElementById("titulo-form-questao").textContent="Editar questão";
-  ["vestibular","ano","numero","materia","tema","nivel","complexidade","pergunta","dica","explicacao","recomendacao","fonte"].forEach(campo=>{
+  ["vestibular","ano","numero","materia","tema","nivel","complexidade","pergunta","dica","explicacao","recomendacao","fonte","imagemPagina"].forEach(campo=>{
     const elemento=document.getElementById(`campo-${campo}`);
     if(elemento)elemento.value=q[campo]??"";
   });
   [0,1,2,3,4].forEach(i=>document.getElementById(`campo-opcao-${i}`).value=q.opcoes[i]||"");
   document.getElementById("campo-resposta").value=String(q.resposta);
   document.getElementById("campo-resolucao").value=q.resolucao.join("\n");
+  document.getElementById("campo-requerImagem").checked=q.requerImagem===true;
   document.getElementById("campo-ativo").checked=q.ativo;
   formQuestao.scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -792,7 +1181,7 @@ function mostrarResumoCategorias(){
   if(!listaJsonImportacao.length||!window.RotaClassificador){resumoCategorias.hidden=true;return;}
   const resumo=window.RotaClassificador.resumir(listaJsonImportacao);
   const linhas=Object.entries(resumo.materias).sort((a,b)=>b[1]-a[1]);
-  resumoCategorias.innerHTML=`<strong>Prévia por categoria</strong><div class="grade-categorias">${linhas.map(([materia,total])=>`<span><b>${materia}</b><small>${total} questão${total===1?"":"ões"}</small></span>`).join("")}</div><small>Confiança automática: alta ${resumo.confiancas.alta||0}, média ${resumo.confiancas.média||0}, baixa ${resumo.confiancas.baixa||0}; preservadas ${resumo.confiancas.original||0}.</small>`;
+  resumoCategorias.innerHTML=`<strong>Prévia por categoria</strong><div class="grade-categorias">${linhas.map(([materia,total])=>`<span><b>${materia}</b><small>${total} questão${total===1?"":"ões"}</small></span>`).join("")}</div><small>Classificação: revisada por prova ${resumo.confiancas.revisada||0}, alta ${resumo.confiancas.alta||0}, média ${resumo.confiancas.média||0}, baixa ${resumo.confiancas.baixa||0}; preservadas ${resumo.confiancas.original||0}.</small>`;
   resumoCategorias.hidden=false;
 }
 function prepararListaJson(dados,nome){
@@ -871,8 +1260,8 @@ btnImportarJson.addEventListener("click",async()=>{
 /* Login Google opcional, compatível com o mesmo admins/{UID}. */
 document.getElementById("login-google").addEventListener("click",async()=>{
   document.getElementById("login-erro").textContent="";
-  try{await autenticacaoFirebase.signInWithPopup(new firebase.auth.GoogleAuthProvider());}
-  catch(falha){document.getElementById("login-erro").textContent="Não foi possível entrar com Google: "+(falha.message||falha);}
+  try{if(!autenticacaoFirebase)throw {code:"auth/operation-not-allowed"};await autenticacaoFirebase.signInWithPopup(new firebase.auth.GoogleAuthProvider());}
+  catch(falha){document.getElementById("login-erro").textContent=textoErroAutenticacao(falha);}
 });
 
 /* Login e verificação adicional do documento admins/{UID}. */
@@ -880,32 +1269,46 @@ document.getElementById("form-login").addEventListener("submit",async evento=>{
   evento.preventDefault();
   const erro=document.getElementById("login-erro"); erro.textContent="";
   try {
+    if(!autenticacaoFirebase)throw {code:"auth/operation-not-allowed"};
     await autenticacaoFirebase.signInWithEmailAndPassword(document.getElementById("login-email").value,document.getElementById("login-senha").value);
-  } catch(falha) { erro.textContent="Acesso não realizado. Confira e-mail, senha e configuração do Firebase."; }
+  } catch(falha) { erro.textContent=textoErroAutenticacao(falha); }
 });
-document.getElementById("sair-admin").addEventListener("click",()=>autenticacaoFirebase.signOut());
+document.getElementById("sair-admin").addEventListener("click",()=>autenticacaoFirebase?.signOut());
 
-async function configurarAdministracao() {
+async function configurarAutenticacao() {
   if(!window.ROTA_FIREBASE_ATIVO) {
     avisoFirebase.innerHTML='<strong>Firebase ainda não configurado.</strong><p>O site está usando as questões demonstrativas. Siga o <a href="configuracao-firebase.html">passo a passo de configuração</a> para ativar o banco e o painel.</p>';
     loginAdmin.querySelectorAll("input,button").forEach(campo=>campo.disabled=true);
+    document.querySelectorAll("#conta-desconectada input,#conta-desconectada button").forEach(campo=>campo.disabled=true);
+    mensagemConta("Configure o Firebase para habilitar criação de contas e sincronização.","erro");
+    renderizarConta();
     return;
   }
   avisoFirebase.innerHTML='<strong>Firebase conectado.</strong><p>Os estudantes veem as questões publicadas; somente administradores autorizados podem alterar o banco.</p>';
   autenticacaoFirebase.onAuthStateChanged(async usuario=>{
-    if(!usuario) { loginAdmin.hidden=false; painelAdmin.hidden=true; return; }
+    usuarioAtual=usuario||null;
+    avatarSelecionado=lerAvatarLocal(usuario?.uid||"visitante")||lerAvatarLocal("visitante")||DEFAULT_AVATAR;
+    desenharAvatares();
+    renderizarConta();
+    if(!usuario) {
+      loginAdmin.hidden=false; painelAdmin.hidden=true;
+      document.getElementById("login-erro").textContent="";
+      return;
+    }
+    await carregarEstadoNuvem(usuario);
     try {
       const permissao=await bancoFirebase.collection("admins").doc(usuario.uid).get();
       if(!permissao.exists||permissao.data().ativo!==true) {
-        document.getElementById("login-erro").textContent="Este usuário não está autorizado na coleção admins.";
-        await autenticacaoFirebase.signOut(); return;
+        loginAdmin.hidden=false; painelAdmin.hidden=true;
+        document.getElementById("login-erro").textContent="Esta conta está conectada como estudante, mas não possui permissão administrativa. Para abrir o painel, entre com uma conta cadastrada em admins/{UID}.";
+        return;
       }
       loginAdmin.hidden=true; painelAdmin.hidden=false;
       document.getElementById("admin-usuario").textContent=usuario.email;
       await listarQuestoesAdmin();
     } catch(erro) {
+      loginAdmin.hidden=false; painelAdmin.hidden=true;
       document.getElementById("login-erro").textContent="Não foi possível verificar a permissão administrativa.";
-      await autenticacaoFirebase.signOut();
     }
   });
   await carregarQuestoesPublicadas();
@@ -919,4 +1322,5 @@ renderizarFiltros();
 renderizarQuestao();
 atualizarResumo();
 limparFormularioQuestao();
-configurarAdministracao();
+renderizarConta();
+configurarAutenticacao();

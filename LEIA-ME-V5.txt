@@ -1,0 +1,46 @@
+ROTA DA APROVAÇÃO V5 — EXPERIÊNCIA E-LEARNING
+================================================
+
+O QUE MUDOU NO VISUAL
+- Layout inteiramente renovado com azul profundo, ciano e roxo.
+- Página inicial inspirada na referência enviada: composição assimétrica,
+  cantos amplos, órbitas de aprendizagem e cartões de trilha.
+- Ilustração vetorial original do estudante, sem depender de imagem externa.
+- Navegação flutuante, botões arredondados e cartões com profundidade suave.
+- Agenda e recomendações organizadas em um painel estilo bento.
+- Páginas internas, login, desempenho, questões e Admin seguem o mesmo sistema.
+- Layout responsivo para computador, tablet e celular.
+
+RECURSOS PRESERVADOS
+- Aba “Entrar” para estudantes criarem conta sem acesso administrativo.
+- Histórico, respostas, favoritas, sequência e desempenho sincronizados no Firestore.
+- Uso sem conta continua disponível com salvamento no navegador.
+- Recuperação de senha e mensagens de autenticação mais úteis.
+- 874 questões classificadas; o classificador de conteúdo permanece na versão V4.
+- 313 questões visuais abrem automaticamente a página original.
+- Todas as 874 questões oferecem acesso à página original; 0 imagens ausentes.
+- Painel Admin permite informar a imagem e marcar quando ela é necessária.
+- Filtros por vestibular, área, conteúdo, matéria, dificuldade, complexidade e imagem.
+
+ANTES DE PUBLICAR
+1. Publique toda esta pasta, inclusive banco-questoes e imagens.
+2. No Firebase Authentication, habilite E-mail/senha e, se desejar, Google.
+3. Adicione o domínio publicado em Authentication > Settings > Authorized domains.
+4. Publique o conteúdo de firestore.rules no console do Firestore.
+5. No Admin, carregue e importe banco-questoes/banco-questoes-completo.json para
+   atualizar os documentos com categorias, imagens e classificador V4.
+
+LOGIN DE ESTUDANTE X ADMINISTRADOR
+- Qualquer conta criada na aba Entrar é uma conta de estudante.
+- Para torná-la administradora, copie o UID do Authentication e crie no Firestore:
+  admins/{UID}
+  ativo: true (booleano)
+- Criar somente o documento admins/{UID} não cria e-mail/senha. A conta precisa
+  existir primeiro no Firebase Authentication.
+
+ARQUIVOS DE APOIO
+- COMO_IMPORTAR_FIRESTORE.txt: implantação e importação detalhadas.
+- configuracao-firebase.html: guia visual de configuração.
+- RELATORIO_REVISAO_CATEGORIAS.txt: auditoria final do banco.
+- REGRAS_DE_CLASSIFICACAO.txt: funcionamento do classificador V4.
+

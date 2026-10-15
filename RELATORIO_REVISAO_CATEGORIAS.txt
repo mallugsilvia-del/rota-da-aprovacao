@@ -1,0 +1,35 @@
+enem-2024-d1.json: 95
+enem-2024-d2.json: 90
+enem-2025-d1.json: 95
+enem-2025-d2.json: 90
+fuvest-2024-f1.json: 90
+fuvest-2025-f1.json: 90
+unicamp-2024-f1.json: 72
+unicamp-2025-f1.json: 72
+unesp-2024-f1.json: 90
+unesp-2025-f1.json: 90
+
+Total: 874
+Questões visuais: 313
+Imagens ausentes: 0
+Registros inválidos: 0
+
+Distribuição por matéria:
+- Matemática: 153
+- Português: 88
+- Física: 86
+- Geografia: 83
+- História: 82
+- Biologia: 78
+- Química: 70
+- Literatura: 61
+- Inglês: 55
+- Sociologia: 46
+- Filosofia: 37
+- Artes: 18
+- Espanhol: 10
+- Educação Física: 7
+
+Confiança da classificação:
+- alta: 152
+- revisada: 722
